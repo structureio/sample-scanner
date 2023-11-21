@@ -108,16 +108,6 @@
 			<key>DefaultValue</key>
 			<false/>
 		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Beta Capture Session</string>
-			<key>Key</key>
-			<string>beta_capture_session</string>
-			<key>DefaultValue</key>
-			<false/>
-		</dict>
 	</array>
 </dict>
 </plist>

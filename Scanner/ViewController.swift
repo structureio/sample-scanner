@@ -88,8 +88,8 @@ class ViewController: UIViewController, STBackgroundTaskDelegate, MeshViewDelega
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    // Enter license key here
-    let status = STLicenseManager.unlock(withKey: "")
+    // Enter license key here(see the readme "Build Process" section)
+    let status = STLicenseManager.unlock(withKey: licenseKey)
     if status != .valid {
       print("Error: No license!")
     }
