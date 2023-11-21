@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "structurekit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/structureio/StructureKit",
+      "state" : {
+        "revision" : "38cf355990f48b4701e766bde88403dc96b9eb64",
+        "version" : "1.0.4"
+      }
+    }
+  ],
+  "version" : 2
+}
