@@ -63,16 +63,17 @@ This app is made for the Structure Sensor accessory. If you do not have a Struct
 - Get the StructureSDK from [Developer Portal](https://structure.io/developers).
 - Clone or download the repo
 - Put `Structure.xcframework` file to Framework directory.
-- Add your sdk license key in `ViewController.swift`:
+- Add your sdk license key in `ViewController.swift`: 
 ```
-let status = STLicenseManager.unlock(withKey: "")
+let licenseKey = "YOUR_SDK_LICENSE"
+let status = STLicenseManager.unlock(withKey: licenseKey)
 ```
 - Build using XCode.
 
 Please take a look at the [contributing guidelines]() for a detailed process on how to build your application as well as troubleshooting information.
 
 ## Acknowledgments
-The original author of this project is [Christopher Worley](cworley@ruthlessresearch.com).
+The original author of this project is [Christopher Worley](mailto:cworley@ruthlessresearch.com).
 
 ## License
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)

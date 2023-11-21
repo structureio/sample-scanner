@@ -65,12 +65,8 @@ extension ViewController: STCaptureSessionDelegate {
     // Clear / reset the capture session if it already exists
     if captureSession == nil {
       // Create an STCaptureSession instance
-      let useUnifiedSession: Bool = UserDefaults.standard.bool(forKey: "beta_capture_session")
-      if useUnifiedSession {
-        captureSession = STCaptureSession.newCaptureSessionBeta()
-      } else {
-        captureSession = STCaptureSession.new()
-      }
+      captureSession = STCaptureSession.new()
+      
       // Enable the following line and comment the above out to playback occ
       // _captureSession = [STCaptureSession
       // newCaptureSessionFromOccFile:@"[AppDocuments]/SN98802_Warm_2020-10-13_13-20-09.occ"];
