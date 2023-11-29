@@ -88,12 +88,14 @@ class ViewController: UIViewController, STBackgroundTaskDelegate, MeshViewDelega
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    // Enter license key here(see the readme "Build Process" section)
-    let status = STLicenseManager.unlock(withKey: licenseKey)
-    if status != .valid {
-      print("Error: No license!")
-    }
 
+    DispatchQueue.global(qos: .background).async {
+      // Enter license key here(see the readme "Build Process" section)
+      let status = STLicenseManager.unlock(withKey: "")
+      if status != .valid {
+        print("Error: No license!")
+      }
+    }
     let defaults = UserDefaults.standard
 
     alignCubeWithCamera = defaults.bool(forKey: "alignCubeWithCamera")
@@ -184,11 +186,8 @@ class ViewController: UIViewController, STBackgroundTaskDelegate, MeshViewDelega
 
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     if segue.identifier == "segueToMesh" {
-      if dynamicOptions.stSlamManagerIsSelected {
-        slamState.lssTracker?.finalizeTriangleMesh()
-      } else {
-        slamState.mapper!.finalizeTriangleMesh()
-      }
+
+      slamState.mapper!.finalizeTriangleMesh()
 
       meshViewController = segue.destination as? MeshViewController
       meshViewController?.delegate = self
@@ -272,17 +271,9 @@ class ViewController: UIViewController, STBackgroundTaskDelegate, MeshViewDelega
     setupMapper()
 
     if fixedCubePosition {
-      if dynamicOptions.stSlamManagerIsSelected {
-        slamState.lssTracker!.initialCameraPose = slamState.cameraPose
-      } else {
-        slamState.tracker!.initialCameraPose = slamState.cameraPose
-      }
+      slamState.tracker!.initialCameraPose = slamState.cameraPose
     } else {
-      if dynamicOptions.stSlamManagerIsSelected {
-        slamState.lssTracker!.initialCameraPose = slamState.initialDepthCameraPose
-      } else {
-        slamState.tracker!.initialCameraPose = slamState.initialDepthCameraPose
-      }
+      slamState.tracker!.initialCameraPose = slamState.initialDepthCameraPose
     }
 
     // We will lock exposure during scanning to ensure better coloring.
@@ -340,11 +331,7 @@ class ViewController: UIViewController, STBackgroundTaskDelegate, MeshViewDelega
 
     if slamState.scannerState == .cubePlacement || slamState.scannerState == .scanning {
       // The tracker is more robust to fast moves if we feed it with motion data.
-      if dynamicOptions.stSlamManagerIsSelected {
-        slamState.lssTracker?.updateCameraPose(with: motion)
-      } else {
-        slamState.tracker?.updateCameraPose(with: motion)
-      }
+      slamState.tracker?.updateCameraPose(with: motion)
     }
   }
 
@@ -730,9 +717,7 @@ class ViewController: UIViewController, STBackgroundTaskDelegate, MeshViewDelega
     if naiveColorizeTask != nil {
       // Release the tracking and mapping resources. It will not be possible to resume a scan after this point
       slamState.mapper?.reset()
-      slamState.lssTracker?.reset()
       slamState.tracker?.reset()
-
       naiveColorizeTask?.delegate = self
       naiveColorizeTask?.start()
       return true
@@ -863,11 +848,6 @@ extension ViewController: SettingsPopupViewDelegate {
       kSTCaptureSessionPropertySensorIRExposureValueKey: NSNumber(value: irManualExposureValue),
       kSTCaptureSessionPropertySensorIRAnalogGainValueKey: NSNumber(value: irAnalogGainValue.rawValue)
     ]
-  }
-
-  func slamOptionDidChange(_ stSlamManagerSelected: Bool) {
-    dynamicOptions.stSlamManagerIsSelected = stSlamManagerSelected
-    onSLAMOptionsChanged()
   }
 
   func trackerSettingsDidChange(_ rgbdTrackingEnabled: Bool) {

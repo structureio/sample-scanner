@@ -63,7 +63,7 @@
 		CE56ED262373D50100C1C5E0 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		CE56ED30237465CE00C1C5E0 /* CalibrationOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalibrationOverlay.swift; sourceTree = "<group>"; };
 		CE6CBF9A2A5E90DC000328C9 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
-		CED0CDD42372391F00CD4EBC /* SwiftScanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftScanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CED0CDD42372391F00CD4EBC /* Scanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CED0CDD62372391F00CD4EBC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CED0CDDD2372391F00CD4EBC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CED0CDDF2372392000CD4EBC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -101,7 +101,7 @@
 		2AFC8D75176F966000F7F3B5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CED0CDD42372391F00CD4EBC /* SwiftScanner.app */,
+				CED0CDD42372391F00CD4EBC /* Scanner.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -190,7 +190,7 @@
 				6A79511C2AD3D5F200EA6431 /* StructureKit */,
 			);
 			productName = SwiftScanner;
-			productReference = CED0CDD42372391F00CD4EBC /* SwiftScanner.app */;
+			productReference = CED0CDD42372391F00CD4EBC /* Scanner.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -442,7 +442,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 3.0.0;
-				PRODUCT_NAME = SwiftScanner;
+				PRODUCT_NAME = Scanner;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -484,7 +484,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 3.0.0;
-				PRODUCT_NAME = SwiftScanner;
+				PRODUCT_NAME = Scanner;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;

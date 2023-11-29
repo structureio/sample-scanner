@@ -49,9 +49,6 @@ extension ViewController {
     // Initialize the scene.
     slamState.scene = STScene()
 
-    if dynamicOptions.stSlamManagerIsSelected {
-      NSLog("STSlamManager is selected")
-    } else {
       NSLog("ObjectScanning Tracker is selected")
 
       // Initialize the camera pose tracker.
@@ -67,7 +64,6 @@ extension ViewController {
       if let scene = slamState.scene {
         slamState.tracker = STTracker(scene: scene, options: trackerOptions)
       }
-    }
 
     // The mapper will be initialized when we start scanning.
 
@@ -106,7 +102,6 @@ extension ViewController {
   func resetSLAM() {
     slamState.prevFrameTimeStamp = -1.0
     slamState.mapper?.reset()
-    slamState.lssTracker?.reset()
     slamState.tracker?.reset()
     slamState.scene?.clear()
     slamState.keyFrameManager?.clear()
@@ -117,61 +112,42 @@ extension ViewController {
   func clearSLAM() {
     slamState.initialized = false
     slamState.scene = nil
-    slamState.lssTracker = nil
     slamState.tracker = nil
     slamState.mapper = nil
     slamState.keyFrameManager = nil
   }
 
   func setupMapper() {
-    if dynamicOptions.stSlamManagerIsSelected {
-      if slamState.lssTracker != nil {
-        slamState.lssTracker = nil
-      }
+    if slamState.mapper != nil {
+      slamState.mapper = nil // make sure we first remove a previous mapper.
+    }
 
-      let trackerOptions = [
-        kSTMapperVolumeResolutionKey: NSNumber(value: 0.003),
-        kSTMapperVolumeBoundsKey: [
-          NSNumber(value: options.volumeSizeInMeters.x),
-          NSNumber(value: options.volumeSizeInMeters.y),
-          NSNumber(value: options.volumeSizeInMeters.z)
-        ]
-      ] as [String: Any]
-      if let scene = slamState.scene {
-        slamState.lssTracker = STSLAMManager(scene: scene, options: trackerOptions)
-      }
-    } else {
-      if slamState.mapper != nil {
-        slamState.mapper = nil // make sure we first remove a previous mapper.
-      }
+    // Here, we set a larger volume bounds size when mapping in high resolution.
+    let lowResolutionVolumeBounds: Float = 125
+    let highResolutionVolumeBounds: Float = 200
 
-      // Here, we set a larger volume bounds size when mapping in high resolution.
-      let lowResolutionVolumeBounds: Float = 125
-      let highResolutionVolumeBounds: Float = 200
+    var voxelSizeInMeters = options.volumeSizeInMeters.x / (dynamicOptions.highResMapping ? highResolutionVolumeBounds : lowResolutionVolumeBounds)
 
-      var voxelSizeInMeters = options.volumeSizeInMeters.x / (dynamicOptions.highResMapping ? highResolutionVolumeBounds : lowResolutionVolumeBounds)
+    // Avoid voxels that are too small - these become too noisy.
+    voxelSizeInMeters = keep(inRange: voxelSizeInMeters, minValue: 0.003, maxValue: 0.2)
 
-      // Avoid voxels that are too small - these become too noisy.
-      voxelSizeInMeters = keep(inRange: voxelSizeInMeters, minValue: 0.003, maxValue: 0.2)
+    // Compute the volume bounds in voxels, as a multiple of the volume resolution.
+    var volumeBounds = GLKVector3()
+    volumeBounds.x = roundf(options.volumeSizeInMeters.x / voxelSizeInMeters)
+    volumeBounds.y = roundf(options.volumeSizeInMeters.y / voxelSizeInMeters)
+    volumeBounds.z = roundf(options.volumeSizeInMeters.z / voxelSizeInMeters)
 
-      // Compute the volume bounds in voxels, as a multiple of the volume resolution.
-      var volumeBounds = GLKVector3()
-      volumeBounds.x = roundf(options.volumeSizeInMeters.x / voxelSizeInMeters)
-      volumeBounds.y = roundf(options.volumeSizeInMeters.y / voxelSizeInMeters)
-      volumeBounds.z = roundf(options.volumeSizeInMeters.z / voxelSizeInMeters)
+    print(String(format: "[Mapper] volumeSize (m): %f %f %f volumeBounds: %.0f %.0f %.0f (resolution=%f m)", options.volumeSizeInMeters.x, options.volumeSizeInMeters.y, options.volumeSizeInMeters.z, volumeBounds.x, volumeBounds.y, volumeBounds.z, voxelSizeInMeters))
 
-      print(String(format: "[Mapper] volumeSize (m): %f %f %f volumeBounds: %.0f %.0f %.0f (resolution=%f m)", options.volumeSizeInMeters.x, options.volumeSizeInMeters.y, options.volumeSizeInMeters.z, volumeBounds.x, volumeBounds.y, volumeBounds.z, voxelSizeInMeters))
-
-      let mapperOptions = [
-        kSTMapperLegacyKey: NSNumber(value: !dynamicOptions.improvedMapperIsOn),
-        kSTMapperVolumeResolutionKey: NSNumber(value: voxelSizeInMeters),
-        kSTMapperVolumeBoundsKey: [NSNumber(value: volumeBounds.x), NSNumber(value: volumeBounds.y), NSNumber(value: volumeBounds.z)],
-        kSTMapperVolumeHasSupportPlaneKey: NSNumber(value: slamState.cameraPoseInitializer!.lastOutput.hasSupportPlane.boolValue),
-        kSTMapperEnableLiveWireFrameKey: NSNumber(value: false)
-      ] as [String: Any]
-      if let scene = slamState.scene {
-        slamState.mapper = STMapper(scene: scene, options: mapperOptions)
-      }
+    let mapperOptions = [
+      kSTMapperLegacyKey: NSNumber(value: !dynamicOptions.improvedMapperIsOn),
+      kSTMapperVolumeResolutionKey: NSNumber(value: voxelSizeInMeters),
+      kSTMapperVolumeBoundsKey: [NSNumber(value: volumeBounds.x), NSNumber(value: volumeBounds.y), NSNumber(value: volumeBounds.z)],
+      kSTMapperVolumeHasSupportPlaneKey: NSNumber(value: slamState.cameraPoseInitializer!.lastOutput.hasSupportPlane.boolValue),
+      kSTMapperEnableLiveWireFrameKey: NSNumber(value: false)
+    ] as [String: Any]
+    if let scene = slamState.scene {
+      slamState.mapper = STMapper(scene: scene, options: mapperOptions)
     }
   }
 
@@ -183,16 +159,8 @@ extension ViewController {
 
     var depthCameraPoseAfterTracking = GLKMatrix4Identity
 
-    if dynamicOptions.stSlamManagerIsSelected {
-      // Only consider adding a new keyframe if the accuracy is high enough.
-      if slamState.lssTracker!.poseAccuracy.rawValue < STTrackerPoseAccuracy.approximate.rawValue {
-        return nil
-      }
+    depthCameraPoseAfterTracking = slamState.tracker!.lastFrameCameraPose()
 
-      depthCameraPoseAfterTracking = slamState.lssTracker!.lastFrameCameraPose()
-    } else {
-      depthCameraPoseAfterTracking = slamState.tracker!.lastFrameCameraPose()
-    }
     // Make sure the pose is in color camera coordinates in case we are not using registered depth.
     let iOSColorFromDepthExtrinsic = depthFrame.iOSColorFromDepthExtrinsics()
     let colorCameraPoseAfterTracking = GLKMatrix4Multiply(depthCameraPoseAfterTracking, GLKMatrix4Invert(iOSColorFromDepthExtrinsic, nil))
@@ -299,66 +267,36 @@ extension ViewController {
 
 //            var depthCameraPoseBeforeTracking = GLKMatrix4Identity
 
-      if dynamicOptions.stSlamManagerIsSelected {
-        let depthCameraPoseBeforeTracking = slamState.lssTracker!.lastFrameCameraPose()
-        do {
-          try slamState.lssTracker!.updateCameraPose(with: depthFrame, colorFrame: colorFrame)
-          trackingMessage = computeTrackerMessage(slamState.lssTracker!.trackerHints)
+      let depthCameraPoseBeforeTracking = slamState.tracker!.lastFrameCameraPose()
 
-          // Set the mesh transparency depending on the current accuracy.
-          updateMeshAlpha(for: slamState.lssTracker!.poseAccuracy)
+      // Integrate it into the current mesh estimate if tracking was successful.
+      do {
+        try slamState.tracker!.updateCameraPose(with: depthFrame, colorFrame: colorFrame)
 
-          // If the tracker accuracy is high, use this frame for mapper update and maybe as a keyframe too.
-          if slamState.lssTracker!.poseAccuracy.rawValue >= STTrackerPoseAccuracy.high.rawValue {
-//                        slamState.mapper?.integrateDepthFrame(depthFrame, cameraPose: (slamState.lssTracker?.lastFrameCameraPose())!)
-          }
-          keyframeMessage = maybeAddKeyframe(with: depthFrame, colorFrame: colorFrame, depthCameraPoseBeforeTracking: depthCameraPoseBeforeTracking)
+        // Update the tracking message.
+        trackingMessage = computeTrackerMessage(slamState.tracker!.trackerHints)
 
-          // Tracking messages have higher priority.
-          if trackingMessage != nil {
-            showTrackingMessage(trackingMessage!)
-          } else if keyframeMessage != nil {
-            showTrackingMessage(keyframeMessage!)
-          } else {
-            hideTrackingErrorMessage()
-          }
-        } catch let trackingError as NSError {
-          NSLog("[Structure] STTracker Error: %@.", trackingError.localizedDescription)
+        // Set the mesh transparency depending on the current accuracy.
+        updateMeshAlpha(for: slamState.tracker!.poseAccuracy)
 
-          trackingMessage = trackingError.localizedDescription
+        // If the tracker accuracy is high, use this frame for mapper update and maybe as a keyframe too.
+        if slamState.tracker!.poseAccuracy.rawValue >= STTrackerPoseAccuracy.high.rawValue {
+          slamState.mapper?.integrateDepthFrame(depthFrame, cameraPose: (slamState.tracker?.lastFrameCameraPose())!)
         }
-      } else {
-        let depthCameraPoseBeforeTracking = slamState.tracker!.lastFrameCameraPose()
+        keyframeMessage = maybeAddKeyframe(with: depthFrame, colorFrame: colorFrame, depthCameraPoseBeforeTracking: depthCameraPoseBeforeTracking)
 
-        // Integrate it into the current mesh estimate if tracking was successful.
-        do {
-          try slamState.tracker!.updateCameraPose(with: depthFrame, colorFrame: colorFrame)
-
-          // Update the tracking message.
-          trackingMessage = computeTrackerMessage(slamState.tracker!.trackerHints)
-
-          // Set the mesh transparency depending on the current accuracy.
-          updateMeshAlpha(for: slamState.tracker!.poseAccuracy)
-
-          // If the tracker accuracy is high, use this frame for mapper update and maybe as a keyframe too.
-          if slamState.tracker!.poseAccuracy.rawValue >= STTrackerPoseAccuracy.high.rawValue {
-            slamState.mapper?.integrateDepthFrame(depthFrame, cameraPose: (slamState.tracker?.lastFrameCameraPose())!)
-          }
-          keyframeMessage = maybeAddKeyframe(with: depthFrame, colorFrame: colorFrame, depthCameraPoseBeforeTracking: depthCameraPoseBeforeTracking)
-
-          // Tracking messages have higher priority.
-          if trackingMessage != nil {
-            showTrackingMessage(trackingMessage!)
-          } else if keyframeMessage != nil {
-            showTrackingMessage(keyframeMessage!)
-          } else {
-            hideTrackingErrorMessage()
-          }
-        } catch let trackingError as NSError {
-          NSLog("[Structure] STTracker Error: %@.", trackingError.localizedDescription)
-
-          trackingMessage = trackingError.localizedDescription
+        // Tracking messages have higher priority.
+        if trackingMessage != nil {
+          showTrackingMessage(trackingMessage!)
+        } else if keyframeMessage != nil {
+          showTrackingMessage(keyframeMessage!)
+        } else {
+          hideTrackingErrorMessage()
         }
+      } catch let trackingError as NSError {
+        NSLog("[Structure] STTracker Error: %@.", trackingError.localizedDescription)
+
+        trackingMessage = trackingError.localizedDescription
       }
       slamState.prevFrameTimeStamp = depthFrame.timestamp
 

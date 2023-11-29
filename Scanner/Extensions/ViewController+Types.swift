@@ -36,7 +36,6 @@ enum AppOrientation {
 }
 
 struct DynamicOptions {
-  var stSlamManagerIsSelected: Bool = false
   var depthAndColorTrackerIsOn: Bool = true
   var highResColoring: Bool = true
   var improvedMapperIsOn: Bool = true
@@ -98,7 +97,6 @@ struct SlamData {
   var prevFrameTimeStamp: TimeInterval = -1
   var scene: STScene?
   var tracker: STTracker?
-  var lssTracker: STSLAMManager?
   var mapper: STMapper?
   var cameraPoseInitializer: STCameraPoseInitializer?
   var initialDepthCameraPose: GLKMatrix4 = GLKMatrix4Identity

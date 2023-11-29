@@ -10,7 +10,6 @@ import UIKit
 protocol SettingsPopupViewDelegate: AnyObject {
   func streamingSettingsDidChange(_ highResolutionColorEnabled: Bool, depthResolution: STCaptureSessionDepthFrameResolution, depthStreamPresetMode: STCaptureSessionPreset)
   func streamingPropertiesDidChange(_ irAutoExposureEnabled: Bool, irManualExposureValue: Float, irAnalogGainValue: STCaptureSessionSensorAnalogGainMode)
-  func slamOptionDidChange(_ stSlamManagerSelected: Bool)
   func trackerSettingsDidChange(_ rgbdTrackingEnabled: Bool)
   func mapperSettingsDidChange(_ highResolutionMeshEnabled: Bool, improvedMapperEnabled: Bool)
 }
@@ -712,102 +711,6 @@ class SettingsListModal: UIScrollView {
       NSLayoutConstraint(item: hr2, attribute: .width, relatedBy: .equal, toItem: hr2.superview, attribute: .width, multiplier: 1.0, constant: 0.0)
     ])
 
-    let slamSettingsLabel = UILabel()
-    slamSettingsLabel.translatesAutoresizingMaskIntoConstraints = false
-    slamSettingsLabel.font = UIFont.systemFont(ofSize: fontHeightSmall, weight: .medium)
-    slamSettingsLabel.textColor = darkTextColor
-    slamSettingsLabel.text = "SLAM SETTINGS"
-    contentView?.addSubview(slamSettingsLabel)
-
-    slamSettingsLabel.superview?.addConstraints([
-      NSLayoutConstraint(item: slamSettingsLabel, attribute: .top, relatedBy: .equal, toItem: hr2, attribute: .bottom, multiplier: 1.0, constant: marginSize),
-      // Pin left of tracker settings label to superview with offset
-      NSLayoutConstraint(item: slamSettingsLabel, attribute: .leading, relatedBy: .equal, toItem: slamSettingsLabel.superview, attribute: .leadingMargin, multiplier: 1.0, constant: 0.0)
-    ])
-
-    let hr3d = createHorizontalRule(1.0)
-    hr3d.backgroundColor = sectionDividerColor
-    contentView?.addSubview(hr3d)
-
-    hr3d.superview?.addConstraints([
-      NSLayoutConstraint(item: hr3d, attribute: .top, relatedBy: .equal, toItem: slamSettingsLabel, attribute: .bottom, multiplier: 1.0, constant: 9.0),
-      // Pin leading edge of hr1 to superview
-      NSLayoutConstraint(item: hr3d, attribute: .centerX, relatedBy: .equal, toItem: hr3d.superview, attribute: .centerX, multiplier: 1.0, constant: 0.0),
-      // Set width of hr1 to equal that of the superview
-      NSLayoutConstraint(item: hr3d, attribute: .width, relatedBy: .equal, toItem: hr3d.superview, attribute: .width, multiplier: 1.0, constant: 0.0)
-    ])
-
-    let slamSettingsView = UIView()
-    slamSettingsView.translatesAutoresizingMaskIntoConstraints = false
-    slamSettingsView.backgroundColor = sectionTitleViewBackgroundColor
-    slamSettingsView.layoutMargins = UIEdgeInsets(top: layoutMarginSize, left: layoutMarginSize, bottom: layoutMarginSize, right: layoutMarginSize)
-    // UIEdgeInsets(top: marginSize, left: marginSize, bottom: marginSize, right: marginSize)
-    contentView?.addSubview(slamSettingsView)
-
-    slamSettingsView.superview?.addConstraints([
-      NSLayoutConstraint(item: slamSettingsView, attribute: .top, relatedBy: .equal, toItem: hr3d, attribute: .bottom, multiplier: 1.0, constant: 0.0),
-      // Pin leading edge of tracker settings view to superview
-      NSLayoutConstraint(item: slamSettingsView, attribute: .leading, relatedBy: .equal, toItem: slamSettingsView.superview, attribute: .leading, multiplier: 1.0, constant: 0.0),
-      // Pin trailing edge of tracker settings view to superview
-      NSLayoutConstraint(item: slamSettingsView, attribute: .width, relatedBy: .equal, toItem: slamSettingsView.superview, attribute: .width, multiplier: 1.0, constant: 0.0)
-    ])
-
-    // SLAM Settings
-    do {
-      let slamOptionLabel = UILabel()
-      slamOptionLabel.translatesAutoresizingMaskIntoConstraints = false
-      slamOptionLabel.font = UIFont.systemFont(ofSize: fontHeight, weight: .medium)
-      slamOptionLabel.textColor = headerTextColor
-      slamOptionLabel.text = "SLAM Option"
-      slamSettingsView.addSubview(slamOptionLabel)
-
-      slamOptionLabel.superview?.addConstraints([
-        NSLayoutConstraint(item: slamOptionLabel, attribute: .top, relatedBy: .equal, toItem: slamOptionLabel.superview, attribute: .topMargin, multiplier: 1.0, constant: 0.0),
-        // Pin leading edge of high-res color label to superview with offset
-        NSLayoutConstraint(item: slamOptionLabel, attribute: .leading, relatedBy: .equal, toItem: slamOptionLabel.superview, attribute: .leadingMargin, multiplier: 1.0, constant: 0.0)
-      ])
-
-      slamOptionSegmentedControl = UISegmentedControl(items: ["Default", "STSLAMManager"])
-      slamOptionSegmentedControl?.translatesAutoresizingMaskIntoConstraints = false
-      slamOptionSegmentedControl?.clipsToBounds = true
-      slamOptionSegmentedControl?.isUserInteractionEnabled = true
-      slamOptionSegmentedControl?.backgroundColor = controlBackgroundColor
-      slamOptionSegmentedControl?.selectedSegmentTintColor = accentColor
-      slamOptionSegmentedControl?.setTitleTextAttributes([
-        NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontHeight, weight: .medium),
-        NSAttributedString.Key.foregroundColor: darkTextColor
-      ], for: .normal)
-      slamOptionSegmentedControl?.setTitleTextAttributes([
-        NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontHeight, weight: .medium),
-        NSAttributedString.Key.foregroundColor: UIColor.white
-      ], for: .selected)
-
-      if let slamOptionSegmentedControl = slamOptionSegmentedControl {
-        slamSettingsView.addSubview(slamOptionSegmentedControl)
-        slamOptionSegmentedControl.superview?.addConstraints([
-          NSLayoutConstraint(item: slamOptionSegmentedControl, attribute: .top, relatedBy: .equal, toItem: slamOptionLabel, attribute: .bottom, multiplier: 1.0, constant: marginSize),
-          // Pin leading edge of IR gain control to leading margin of superview
-          NSLayoutConstraint(item: slamOptionSegmentedControl, attribute: .leading, relatedBy: .equal, toItem: slamOptionSegmentedControl.superview, attribute: .leadingMargin, multiplier: 1.0, constant: 0.0),
-          // Pin trailing edge of IR gain control to trailing margin of superview
-          NSLayoutConstraint(item: slamOptionSegmentedControl, attribute: .trailing, relatedBy: .equal, toItem: slamOptionSegmentedControl.superview, attribute: .trailingMargin, multiplier: 1.0, constant: 0.0),
-          // Pin bottom edge of stream preset control to bottom margin of superview
-          NSLayoutConstraint(item: slamOptionSegmentedControl, attribute: .bottom, relatedBy: .equal, toItem: slamOptionSegmentedControl.superview, attribute: .bottomMargin, multiplier: 1.0, constant: 0.0)
-        ])
-      }
-    }
-
-    let hr2dd = createHorizontalRule(1.0)
-    hr2dd.backgroundColor = sectionDividerColor
-    contentView?.addSubview(hr2dd)
-
-    hr2dd.superview?.addConstraints([
-      NSLayoutConstraint(item: hr2dd, attribute: .top, relatedBy: .equal, toItem: slamSettingsView, attribute: .bottom, multiplier: 1.0, constant: 0.0),
-      // Pin leading edge of hr1 to superview
-      NSLayoutConstraint(item: hr2dd, attribute: .centerX, relatedBy: .equal, toItem: hr2dd.superview, attribute: .centerX, multiplier: 1.0, constant: 0.0),
-      // Set width of hr1 to equal that of the superview
-      NSLayoutConstraint(item: hr2dd, attribute: .width, relatedBy: .equal, toItem: hr2dd.superview, attribute: .width, multiplier: 1.0, constant: 0.0)
-    ])
-
     let trackerSettingsLabel = UILabel()
     trackerSettingsLabel.translatesAutoresizingMaskIntoConstraints = false
     trackerSettingsLabel.font = UIFont.systemFont(ofSize: fontHeightSmall, weight: .medium)
@@ -816,7 +719,7 @@ class SettingsListModal: UIScrollView {
     contentView?.addSubview(trackerSettingsLabel)
 
     trackerSettingsLabel.superview?.addConstraints([
-      NSLayoutConstraint(item: trackerSettingsLabel, attribute: .top, relatedBy: .equal, toItem: hr2dd, attribute: .bottom, multiplier: 1.0, constant: marginSize),
+      NSLayoutConstraint(item: trackerSettingsLabel, attribute: .top, relatedBy: .equal, toItem: hr2, attribute: .bottom, multiplier: 1.0, constant: marginSize),
       // Pin left of tracker settings label to superview with offset
       NSLayoutConstraint(item: trackerSettingsLabel, attribute: .leading, relatedBy: .equal, toItem: trackerSettingsLabel.superview, attribute: .leadingMargin, multiplier: 1.0, constant: 0.0)
     ])
