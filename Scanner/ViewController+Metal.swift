@@ -55,11 +55,7 @@ extension ViewController {
 
       var depthCameraPose = GLKMatrix4Identity
 
-      if dynamicOptions.stSlamManagerIsSelected {
-        depthCameraPose = slamState.lssTracker!.lastFrameCameraPose()
-      } else {
-        depthCameraPose = slamState.tracker!.lastFrameCameraPose()
-      }
+      depthCameraPose = slamState.tracker!.lastFrameCameraPose()
 
       var cameraViewpoint: GLKMatrix4
       if useColorCamera {

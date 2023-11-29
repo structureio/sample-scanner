@@ -66,7 +66,7 @@ extension ViewController: STCaptureSessionDelegate {
     if captureSession == nil {
       // Create an STCaptureSession instance
       captureSession = STCaptureSession.new()
-      
+
       // Enable the following line and comment the above out to playback occ
       // _captureSession = [STCaptureSession
       // newCaptureSessionFromOccFile:@"[AppDocuments]/SN98802_Warm_2020-10-13_13-20-09.occ"];
