@@ -91,7 +91,7 @@ class ViewController: UIViewController, STBackgroundTaskDelegate, MeshViewDelega
 
     DispatchQueue.global(qos: .background).async {
       // Enter license key here(see the readme "Build Process" section)
-      let status = STLicenseManager.unlock(withKey: licenseKey)
+      let status = STLicenseManager.unlock(withKey: licenseKey, shouldRefresh: true)
       if status != .valid {
         print("Error: No license!")
       }
