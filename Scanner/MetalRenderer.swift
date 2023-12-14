@@ -33,7 +33,7 @@ class MetalData: NSObject, MTKViewDelegate {
 
   private var _cameraPosition = float4x4.identity
   private var _options: Options
-  private var _queue = dispatch_queue_serial_t(label: "metal.visualization")
+  private var _queue = DispatchQueue(label: "metal.visualization")
   private var _imp: STKMetalRenderer
 
   init(view: MTKView, device: MTLDevice, options: Options) {
