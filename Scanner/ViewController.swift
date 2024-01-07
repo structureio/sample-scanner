@@ -348,13 +348,13 @@ class ViewController: UIViewController, STBackgroundTaskDelegate, MeshViewDelega
   }
 
   func adjustVolumeSize(_ volumeSize: vector_float3) {
-    var volume = vector_float3()
+    var volume = volumeSize
     // Make sure the volume size remains between 10 centimeters and 3 meters.
-    volume.x = keep(inRange: volumeSize.x, minValue: 0.1, maxValue: 3.0)
-    volume.y = keep(inRange: volumeSize.y, minValue: 0.1, maxValue: 3.0)
-    volume.z = keep(inRange: volumeSize.z, minValue: 0.1, maxValue: 3.0)
+    volume.x = keep(inRange: volume.x, minValue: 0.1, maxValue: 3.0)
+    volume.y = keep(inRange: volume.y, minValue: 0.1, maxValue: 3.0)
+    volume.z = keep(inRange: volume.z, minValue: 0.1, maxValue: 3.0)
 
-    boxSizeLabel.text = String.localizedStringWithFormat("Size %1.2f m", volumeSize.x)
+    boxSizeLabel.text = String.localizedStringWithFormat("Size %1.2f m", volume.x)
 
     options.volumeSizeInMeters = volume
     slamState.cameraPoseInitializer!.volumeSizeInMeters = volume.toGLK()
