@@ -308,7 +308,7 @@ class SettingsListModal: UIScrollView {
 
     irManualExposureSlider?.isEnabled = !(irAutoExposureSwitch?.isOn ?? false)
 
-    irGainSegmentedControl?.selectedSegmentIndex = 3
+    irGainSegmentedControl?.selectedSegmentIndex = 2
 
     streamPresetDropControl?.selectedIndex = 0
 
