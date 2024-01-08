@@ -536,6 +536,8 @@ class ViewController: UIViewController, STBackgroundTaskDelegate, MeshViewDelega
     if needToConnectSensor {
       // If sensor is never connected before show sensor required banner
       if !UserDefaults.standard.hasConnectedSensorBefore {
+        // Bring the view to front otherwise it appears behind settings view
+        self.view.bringSubviewToFront(sensorRequiredImageView)
         sensorRequiredImageView.isHidden = false
       } else {
         showAppStatusMessage(appStatus.pleaseConnectSensorMessage)
