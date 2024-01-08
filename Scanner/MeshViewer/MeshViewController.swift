@@ -377,7 +377,7 @@ public class MeshViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     present(activityViewController, animated: true)
   }
-  
+
   @IBAction func openDeveloperPortal(_ sender: Any) {
     UIApplication.shared.open(URL(string: "https://structure.io/developers")!)
   }
