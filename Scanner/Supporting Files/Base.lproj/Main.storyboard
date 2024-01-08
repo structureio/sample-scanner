@@ -235,7 +235,7 @@ Try to re-align or press reset.</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Structure Sensor Required -V2" translatesAutoresizingMaskIntoConstraints="NO" id="egI-dY-ALW">
-                                <rect key="frame" x="0.0" y="0.0" width="1113" height="744"/>
+                                <rect key="frame" x="0.0" y="0.0" width="1133" height="744"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </imageView>
                         </subviews>
@@ -268,7 +268,7 @@ Try to re-align or press reset.</string>
                             <constraint firstAttribute="bottom" secondItem="o3c-uF-Qid" secondAttribute="bottom" id="cBD-CS-ehw"/>
                             <constraint firstItem="Idu-3U-hW4" firstAttribute="leading" secondItem="TRf-EL-7Fa" secondAttribute="leading" constant="20" id="cGa-PZ-cag"/>
                             <constraint firstItem="TUm-oZ-rCK" firstAttribute="bottom" secondItem="pio-fW-8pi" secondAttribute="bottom" id="dZ2-QJ-i1h"/>
-                            <constraint firstAttribute="trailing" secondItem="egI-dY-ALW" secondAttribute="trailing" constant="20" id="gOt-Dy-CXo"/>
+                            <constraint firstAttribute="trailing" secondItem="egI-dY-ALW" secondAttribute="trailing" id="gOt-Dy-CXo"/>
                             <constraint firstItem="U0Z-hc-Nsb" firstAttribute="centerX" secondItem="n0K-yh-aNT" secondAttribute="centerX" id="ghq-ZI-bI7"/>
                             <constraint firstItem="o3c-uF-Qid" firstAttribute="leading" secondItem="pio-fW-8pi" secondAttribute="leading" id="hV0-zR-jMg"/>
                             <constraint firstItem="urz-bf-VSg" firstAttribute="bottom" secondItem="TRf-EL-7Fa" secondAttribute="bottom" id="hdN-lz-zW1"/>
@@ -391,7 +391,7 @@ Try to re-align or press reset.</string>
                                                     <action selector="shareMeshWithSender:" destination="z60-uS-bak" id="2za-MU-FgL"/>
                                                 </connections>
                                             </barButtonItem>
-                                            <barButtonItem title="Mail" image="person.fill" catalog="system" id="mIW-HL-0zZ">
+                                            <barButtonItem title="Mail" image="questionmark.circle.fill" catalog="system" id="mIW-HL-0zZ">
                                                 <color key="tintColor" name="AccentColor"/>
                                                 <connections>
                                                     <action selector="emailSupport" destination="z60-uS-bak" id="YdI-xd-fsR"/>
@@ -475,7 +475,7 @@ Try to re-align or press reset.</string>
         <image name="btn-restart" width="65" height="65"/>
         <image name="btn-scan" width="90" height="90"/>
         <image name="icon-battery-full" width="26" height="12"/>
-        <image name="person.fill" catalog="system" width="128" height="120"/>
+        <image name="questionmark.circle.fill" catalog="system" width="128" height="123"/>
         <image name="square.and.arrow.up" catalog="system" width="108" height="128"/>
         <image name="structure-icon" width="1024" height="1024"/>
         <namedColor name="AccentColor">
