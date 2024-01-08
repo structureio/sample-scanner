@@ -45,7 +45,6 @@ struct DynamicOptions {
   var depthResolution: STCaptureSessionDepthFrameResolution = .resolution640x480
 }
 
-// Volume resolution in meters
 class Options {
   // The initial scanning volume size will be 0.5 x 0.5 x 0.5 meters
   // (X is left-right, Y is up-down, Z is forward-back)

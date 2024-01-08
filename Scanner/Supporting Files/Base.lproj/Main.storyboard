@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="KRY-oe-LFU">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="KRY-oe-LFU">
     <device id="ipad7_9" orientation="landscape" layout="fullscreen" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -13,8 +13,8 @@
         <!--ViewController-->
         <scene sceneID="9qA-Sc-Qbe">
             <objects>
-                <viewController storyboardIdentifier="ViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="KRY-oe-LFU" userLabel="ViewController" customClass="ViewController" customModule="SwiftScanner" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" autoresizesSubviews="NO" contentMode="scaleToFill" id="pio-fW-8pi" customClass="EAGLView" customModule="SwiftScanner" customModuleProvider="target">
+                <viewController storyboardIdentifier="ViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="KRY-oe-LFU" userLabel="ViewController" customClass="ViewController" customModule="Scanner" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" autoresizesSubviews="NO" contentMode="scaleToFill" id="pio-fW-8pi" customClass="EAGLView" customModule="Scanner" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="1133" height="744"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -182,13 +182,20 @@ Try to re-align or press reset.</string>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="APPROVED_Powered_By_StructureSDK_logo3" translatesAutoresizingMaskIntoConstraints="NO" id="g8Z-c7-LC2">
-                                <rect key="frame" x="933" y="624" width="180" height="100"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rdr-3H-7Ra" userLabel="Button - Powered by Streucture">
+                                <rect key="frame" x="893" y="649" width="200" height="55"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="g8R-ia-fFH"/>
-                                    <constraint firstAttribute="width" constant="180" id="yPR-Ja-LOy"/>
+                                    <constraint firstAttribute="height" constant="55" id="5VU-jG-5O7"/>
+                                    <constraint firstAttribute="width" constant="200" id="Pjt-ac-UZb"/>
                                 </constraints>
-                            </imageView>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title=" ">
+                                    <backgroundConfiguration key="background" image="APPROVED_Powered_By_StructureSDK_logo3"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="openDeveloperPortal:" destination="KRY-oe-LFU" eventType="touchUpInside" id="oIf-kR-zqf"/>
+                                </connections>
+                            </button>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xUw-JA-EY7">
                                 <rect key="frame" x="20" y="592" width="51" height="31"/>
                                 <color key="onTintColor" name="AccentColor"/>
@@ -243,9 +250,7 @@ Try to re-align or press reset.</string>
                             <constraint firstItem="xUw-JA-EY7" firstAttribute="leading" secondItem="TRf-EL-7Fa" secondAttribute="leading" constant="20" id="3x2-0D-kkR"/>
                             <constraint firstItem="egI-dY-ALW" firstAttribute="top" secondItem="pio-fW-8pi" secondAttribute="top" id="5Uz-PW-a39"/>
                             <constraint firstItem="TUm-oZ-rCK" firstAttribute="top" secondItem="pio-fW-8pi" secondAttribute="top" id="7Ow-gY-hsk"/>
-                            <constraint firstItem="TRf-EL-7Fa" firstAttribute="trailing" secondItem="g8Z-c7-LC2" secondAttribute="trailing" constant="20" id="8t0-AQ-Ebq"/>
                             <constraint firstItem="tN5-kv-hWU" firstAttribute="leading" secondItem="xUw-JA-EY7" secondAttribute="trailing" constant="15" id="BNb-aA-115"/>
-                            <constraint firstItem="g8Z-c7-LC2" firstAttribute="bottom" secondItem="TRf-EL-7Fa" secondAttribute="bottom" id="Dh1-dP-aku"/>
                             <constraint firstItem="U0Z-hc-Nsb" firstAttribute="centerY" secondItem="MMu-vc-hjp" secondAttribute="centerY" id="FEk-iV-n5Q"/>
                             <constraint firstItem="urz-bf-VSg" firstAttribute="leading" secondItem="TRf-EL-7Fa" secondAttribute="leading" constant="20" id="LzP-q6-uw2"/>
                             <constraint firstItem="TUm-oZ-rCK" firstAttribute="width" secondItem="pio-fW-8pi" secondAttribute="width" id="MMs-aG-zEc"/>
@@ -275,6 +280,8 @@ Try to re-align or press reset.</string>
                             <constraint firstItem="ceg-sK-rWh" firstAttribute="top" secondItem="TRf-EL-7Fa" secondAttribute="top" constant="20" id="rnc-zD-Rmx"/>
                             <constraint firstItem="2xc-N8-Peb" firstAttribute="leading" secondItem="TRf-EL-7Fa" secondAttribute="leading" constant="20" id="s3W-ti-9iA"/>
                             <constraint firstAttribute="bottom" secondItem="egI-dY-ALW" secondAttribute="bottom" id="sFi-Sj-XEB"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="Rdr-3H-7Ra" secondAttribute="bottom" constant="20" id="ufi-vw-lT3"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Rdr-3H-7Ra" secondAttribute="trailing" constant="20" id="yfH-Dh-d7Y"/>
                             <constraint firstItem="2xc-N8-Peb" firstAttribute="top" secondItem="Idu-3U-hW4" secondAttribute="bottom" constant="8" symbolic="YES" id="zko-cb-EIT"/>
                         </constraints>
                         <connections>
@@ -305,19 +312,14 @@ Try to re-align or press reset.</string>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KpC-WS-8fm" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <pinchGestureRecognizer id="irm-k8-d4P">
-                    <connections>
-                        <action selector="pinchGesture:" destination="KRY-oe-LFU" id="9Tf-3o-3iH"/>
-                        <outlet property="delegate" destination="KRY-oe-LFU" id="dIY-4z-lyi"/>
-                    </connections>
-                </pinchGestureRecognizer>
+                <pinchGestureRecognizer id="irm-k8-d4P"/>
             </objects>
             <point key="canvasLocation" x="-0.26478375992939096" y="0.0"/>
         </scene>
         <!--MeshViewController-->
         <scene sceneID="Nh4-Go-6Eh">
             <objects>
-                <viewController storyboardIdentifier="MeshViewController" extendedLayoutIncludesOpaqueBars="YES" modalPresentationStyle="overFullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="z60-uS-bak" userLabel="MeshViewController" customClass="MeshViewController" customModule="SwiftScanner" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MeshViewController" extendedLayoutIncludesOpaqueBars="YES" modalPresentationStyle="overFullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="z60-uS-bak" userLabel="MeshViewController" customClass="MeshViewController" customModule="Scanner" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ghO-dS-Jl4" customClass="MTKView">
                         <rect key="frame" x="0.0" y="0.0" width="1133" height="744"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -389,7 +391,7 @@ Try to re-align or press reset.</string>
                                                     <action selector="shareMeshWithSender:" destination="z60-uS-bak" id="2za-MU-FgL"/>
                                                 </connections>
                                             </barButtonItem>
-                                            <barButtonItem title="Mail" image="person.fill" catalog="system" id="mIW-HL-0zZ">
+                                            <barButtonItem title="Mail" image="questionmark.circle.fill" catalog="system" id="mIW-HL-0zZ">
                                                 <color key="tintColor" name="AccentColor"/>
                                                 <connections>
                                                     <action selector="emailSupport" destination="z60-uS-bak" id="YdI-xd-fsR"/>
@@ -399,13 +401,20 @@ Try to re-align or press reset.</string>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="APPROVED_Powered_By_StructureSDK_logo3" translatesAutoresizingMaskIntoConstraints="NO" id="tYd-Z3-kIB">
-                                <rect key="frame" x="933" y="644" width="180" height="100"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cw3-F9-oOy" userLabel="Button - Powered by Streucture">
+                                <rect key="frame" x="893" y="669" width="200" height="55"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="Ww5-LK-cWd"/>
-                                    <constraint firstAttribute="width" constant="180" id="oM1-rV-2h6"/>
+                                    <constraint firstAttribute="height" constant="55" id="qaF-VW-r7W"/>
+                                    <constraint firstAttribute="width" constant="200" id="reZ-rs-R1s"/>
                                 </constraints>
-                            </imageView>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title=" ">
+                                    <backgroundConfiguration key="background" image="APPROVED_Powered_By_StructureSDK_logo3"/>
+                                </buttonConfiguration>
+                                <connections>
+                                    <action selector="openDeveloperPortal:" destination="z60-uS-bak" eventType="touchUpInside" id="vsg-pm-BdC"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="iHh-a2-LlV"/>
                         <color key="backgroundColor" name="DarkTextColor"/>
@@ -413,13 +422,13 @@ Try to re-align or press reset.</string>
                         <constraints>
                             <constraint firstItem="ZZW-vC-39L" firstAttribute="centerX" secondItem="iHh-a2-LlV" secondAttribute="centerX" id="8OD-Yk-yHs"/>
                             <constraint firstItem="r0q-3I-1Jn" firstAttribute="top" secondItem="ghO-dS-Jl4" secondAttribute="top" id="HM0-e8-A3g"/>
-                            <constraint firstItem="iHh-a2-LlV" firstAttribute="trailing" secondItem="tYd-Z3-kIB" secondAttribute="trailing" constant="20" id="IJ3-Ih-q2E"/>
-                            <constraint firstItem="iHh-a2-LlV" firstAttribute="bottom" secondItem="tYd-Z3-kIB" secondAttribute="bottom" id="R0M-tb-gW7"/>
                             <constraint firstItem="ZZW-vC-39L" firstAttribute="centerY" secondItem="ghO-dS-Jl4" secondAttribute="centerY" id="Se4-gp-54F"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="cw3-F9-oOy" secondAttribute="trailing" constant="20" id="UBT-45-9hK"/>
                             <constraint firstItem="iHh-a2-LlV" firstAttribute="bottom" secondItem="Q8P-PO-ONV" secondAttribute="bottom" constant="50" id="Wta-b3-mFd"/>
                             <constraint firstItem="r0q-3I-1Jn" firstAttribute="leading" secondItem="iHh-a2-LlV" secondAttribute="leading" id="hev-IS-eYG"/>
                             <constraint firstItem="r0q-3I-1Jn" firstAttribute="trailing" secondItem="iHh-a2-LlV" secondAttribute="trailing" id="hi1-o0-zh8"/>
                             <constraint firstItem="Q8P-PO-ONV" firstAttribute="centerX" secondItem="iHh-a2-LlV" secondAttribute="centerX" id="lLb-SA-yzQ"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="cw3-F9-oOy" secondAttribute="bottom" constant="20" id="yZR-Cs-QqB"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="x85-IV-88s" appends="YES" id="yrN-7i-rAy"/>
@@ -466,8 +475,8 @@ Try to re-align or press reset.</string>
         <image name="btn-restart" width="65" height="65"/>
         <image name="btn-scan" width="90" height="90"/>
         <image name="icon-battery-full" width="26" height="12"/>
-        <image name="person.fill" catalog="system" width="128" height="120"/>
-        <image name="square.and.arrow.up" catalog="system" width="115" height="128"/>
+        <image name="questionmark.circle.fill" catalog="system" width="128" height="123"/>
+        <image name="square.and.arrow.up" catalog="system" width="108" height="128"/>
         <image name="structure-icon" width="1024" height="1024"/>
         <namedColor name="AccentColor">
             <color red="0.0" green="0.76499998569488525" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
