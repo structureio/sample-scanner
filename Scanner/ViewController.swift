@@ -633,18 +633,16 @@ class ViewController: UIViewController, STBackgroundTaskDelegate, MeshViewDelega
   }
 
   @IBAction func pinchGesture(_ gestureRecognizer: UIPinchGestureRecognizer) {
-    var initScale: CGFloat = 1 // For storing initial scale temporarily(makes scaling smoother)
     if gestureRecognizer.state == .began {
       if slamState.scannerState == .cubePlacement {
-        volumeScale.initialPinchScale = volumeScale.currentScale / gestureRecognizer.scale
-        initScale = volumeScale.initialPinchScale
+        volumeScale.initialPinchScale = 1
       }
       initialVolumeSize = options.volumeSizeInMeters
     } else if gestureRecognizer.state == .changed {
       if slamState.scannerState == .cubePlacement {
         // In some special conditions the gesture recognizer can send a zero initial scale.
         if !volumeScale.initialPinchScale.isNaN {
-          volumeScale.currentScale = gestureRecognizer.scale * initScale
+          volumeScale.currentScale = gestureRecognizer.scale * volumeScale.initialPinchScale
 
           // Don't let our scale multiplier become absurd
           volumeScale.currentScale = CGFloat(keep(inRange: Float(volumeScale.currentScale), minValue: 0.01, maxValue: 1000.0))
