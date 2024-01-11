@@ -302,7 +302,7 @@ class SettingsListModal: UIScrollView {
 
     highResolutionColorSwitch?.isOn = true
 
-    irAutoExposureSwitch?.isOn = false
+    irAutoExposureSwitch?.isOn = true
 
     irManualExposureSlider?.value = 14
 
