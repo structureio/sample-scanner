@@ -188,10 +188,8 @@ Try to re-align or press reset.</string>
                                     <constraint firstAttribute="height" constant="55" id="5VU-jG-5O7"/>
                                     <constraint firstAttribute="width" constant="200" id="Pjt-ac-UZb"/>
                                 </constraints>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title=" ">
-                                    <backgroundConfiguration key="background" image="APPROVED_Powered_By_StructureSDK_logo3"/>
-                                </buttonConfiguration>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title=" " backgroundImage="APPROVED_Powered_By_StructureSDK_logo3"/>
                                 <connections>
                                     <action selector="openDeveloperPortal:" destination="KRY-oe-LFU" eventType="touchUpInside" id="oIf-kR-zqf"/>
                                 </connections>
@@ -407,10 +405,8 @@ Try to re-align or press reset.</string>
                                     <constraint firstAttribute="height" constant="55" id="qaF-VW-r7W"/>
                                     <constraint firstAttribute="width" constant="200" id="reZ-rs-R1s"/>
                                 </constraints>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title=" ">
-                                    <backgroundConfiguration key="background" image="APPROVED_Powered_By_StructureSDK_logo3"/>
-                                </buttonConfiguration>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title=" " backgroundImage="APPROVED_Powered_By_StructureSDK_logo3"/>
                                 <connections>
                                     <action selector="openDeveloperPortal:" destination="z60-uS-bak" eventType="touchUpInside" id="vsg-pm-BdC"/>
                                 </connections>
@@ -494,7 +490,7 @@ Try to re-align or press reset.</string>
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
