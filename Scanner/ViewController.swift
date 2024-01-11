@@ -546,13 +546,16 @@ class ViewController: UIViewController, STBackgroundTaskDelegate, MeshViewDelega
     }
 
     if captureSession.sensorMode == STCaptureSessionSensorMode.wakingUp {
-      // If sensor is connected first time set the flag to true
+      showAppStatusMessage(appStatus.sensorIsWakingUpMessage)
+      return
+    }
+    
+    // If sensor is connected first time set the flag to true
+    if captureSession.sensorMode == STCaptureSessionSensorMode.ready {
       if !UserDefaults.standard.hasConnectedSensorBefore {
         UserDefaults.standard.hasConnectedSensorBefore = true
         sensorRequiredImageView.isHidden = true
       }
-      showAppStatusMessage(appStatus.sensorIsWakingUpMessage)
-      return
     }
 
     if needToChargeSensor {
