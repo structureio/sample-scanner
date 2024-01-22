@@ -47,7 +47,10 @@ class ViewController: UIViewController, STBackgroundTaskDelegate, MeshViewDelega
   var runDepthRefinement: Bool = false
   var settingsPopupView: SettingsPopupView?
   var calibrationOverlay: CalibrationOverlay?
-
+  
+  let licenseQueue = DispatchQueue(label: "license.validation", qos: .userInitiated)
+  let captureSessionQueue = DispatchQueue(label: "captureSession.operations", qos: .userInteractive)
+  
   @IBOutlet var mtkView: MTKView!
   @IBOutlet var appStatusMessageLabel: UILabel!
   @IBOutlet var scanButton: UIButton!
@@ -89,7 +92,7 @@ class ViewController: UIViewController, STBackgroundTaskDelegate, MeshViewDelega
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    DispatchQueue(label: "license.validation", qos: .userInitiated).async {
+    licenseQueue.async {
       // Enter license key here(see the readme "Build Process" section)
       let status = STLicenseManager.unlock(withKey: licenseKey, shouldRefresh: false)
       if status != .valid {
@@ -243,9 +246,15 @@ class ViewController: UIViewController, STBackgroundTaskDelegate, MeshViewDelega
 
     settingsPopupView?.enableAllSettingsDuringCubePlacement()
 
-    captureSession.streamingEnabled = true
-    captureSession.properties = STCaptureSessionPropertiesSetColorCameraAutoExposureISOAndWhiteBalance()
-
+    captureSessionQueue.async { [weak self] in
+      guard let self = self else {
+        print("Error while starting capture session stream.")
+        return
+      }
+      self.captureSession.streamingEnabled = true
+      self.captureSession.properties = STCaptureSessionPropertiesSetColorCameraAutoExposureISOAndWhiteBalance()
+    }
+    
     slamState.scannerState = ScannerState.cubePlacement
 
     updateIdleTimer()
@@ -549,7 +558,7 @@ class ViewController: UIViewController, STBackgroundTaskDelegate, MeshViewDelega
       showAppStatusMessage(appStatus.sensorIsWakingUpMessage)
       return
     }
-    
+
     // If sensor is connected first time set the flag to true
     if captureSession.sensorMode == STCaptureSessionSensorMode.ready {
       if !UserDefaults.standard.hasConnectedSensorBefore {
