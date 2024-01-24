@@ -57,7 +57,8 @@ extension ViewController {
         kSTTrackerTrackAgainstModelKey: NSNumber(value: true) /* tracking against the model is much better for close range scanning. */,
         kSTTrackerQualityKey: NSNumber(value: STTrackerQuality.accurate.rawValue),
         kSTTrackerBackgroundProcessingEnabledKey: NSNumber(value: true),
-        kSTTrackerSceneTypeKey: NSNumber(value: STTrackerSceneType.object.rawValue)
+        kSTTrackerSceneTypeKey: NSNumber(value: STTrackerSceneType.object.rawValue),
+        kSTTrackerLegacyKey: NSNumber(value: true)
       ]
 
       // Initialize the camera pose tracker.
