@@ -44,9 +44,10 @@
 			<key>Key</key>
 			<string>meshExportFormat</string>
 			<key>DefaultValue</key>
-			<integer>0</integer>
+			<integer>1</integer>
 			<key>Titles</key>
 			<array>
+				<string>OBJ</string>
 				<string>OBJ zip</string>
 				<string>PLY</string>
 				<string>STL</string>
@@ -56,6 +57,7 @@
 				<integer>0</integer>
 				<integer>1</integer>
 				<integer>2</integer>
+				<integer>4</integer>
 			</array>
 		</dict>
 		<dict>

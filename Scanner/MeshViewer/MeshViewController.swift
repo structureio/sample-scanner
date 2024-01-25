@@ -243,16 +243,6 @@ public class MeshViewController: UIViewController, UIGestureRecognizerDelegate {
     viewpointController.onTouchBegan()
   }
 
-  func prepareScreenShot(_ screenshotPath: URL) {
-    let lastDrawableDisplayed = mtkView.currentDrawable?.texture
-    if let imageRef = lastDrawableDisplayed?.toImage() {
-      let uiImage = UIImage(cgImage: imageRef)
-      if let data = uiImage.jpegData(compressionQuality: 0.8) {
-        try? data.write(to: screenshotPath)
-      }
-    }
-  }
-
   // MARK: - Rendering
 
   func draw() {
@@ -339,23 +329,33 @@ public class MeshViewController: UIViewController, UIGestureRecognizerDelegate {
 
   @IBAction func shareMesh(sender: UIBarButtonItem) {
     guard let cacheDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+
+    let exportExtensions: [Int: String] = [
+      STMeshWriteOptionFileFormat.objFile.rawValue: "obj",
+      STMeshWriteOptionFileFormat.objFileZip.rawValue: "zip",
+      STMeshWriteOptionFileFormat.plyFile.rawValue: "ply",
+      STMeshWriteOptionFileFormat.binarySTLFile.rawValue: "stl"
+    ]
+
+    guard let meshExportFormat = exportExtensions[getMeshExportFormat()] else { return }
+
     // Setup paths and filenames.
-    let zipFilename = "Model.zip"
-    let zipPath = cacheDirectory.appendingPathComponent("\(zipFilename)")
+    let filename = String.localizedStringWithFormat("Model.%@", meshExportFormat)
+    let filePath = cacheDirectory.appendingPathComponent("\(filename)")
 
     let screenshotFilename = "Preview.jpg"
     let screenshotPath = cacheDirectory.appendingPathComponent("\(screenshotFilename)")
 
-    // Request a zipped OBJ file, potentially with embedded MTL and texture.
+    // Request the file
     let options: [AnyHashable: Any] = [
-      kSTMeshWriteOptionFileFormatKey: STMeshWriteOptionFileFormat.objFileZip.rawValue,
+      kSTMeshWriteOptionFileFormatKey: getMeshExportFormat(),
       kSTMeshWriteOptionUseXRightYUpConventionKey: true
     ]
 
     guard let meshToSend = mesh else { return }
 
     do {
-      try meshToSend.write(toFile: zipPath.path, options: options)
+      try meshToSend.write(toFile: filePath.path, options: options)
     } catch {
       showAlert(title: "ERROR!!!", message: "Mesh exporting failed: \(error.localizedDescription).")
       return
@@ -368,7 +368,7 @@ public class MeshViewController: UIViewController, UIGestureRecognizerDelegate {
       showAlert(title: "ERROR!!!", message: "Failed to create screenshot of mesh.")
       return
     }
-    let meshFile = NSURL.fileURL(withPath: zipPath.path)
+    let meshFile = NSURL.fileURL(withPath: filePath.path)
     let activityItems: [STKMixedActivityItemSource] = [.init(item: .image(image: image)),
                                                        .init(item: .archieve(file: meshFile))]
     let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
@@ -380,5 +380,23 @@ public class MeshViewController: UIViewController, UIGestureRecognizerDelegate {
 
   @IBAction func openDeveloperPortal(_ sender: Any) {
     UIApplication.shared.open(URL(string: "https://structure.io/developers")!)
+  }
+
+  // MARK: - Helper Functions
+
+  func prepareScreenShot(_ screenshotPath: URL) {
+    let lastDrawableDisplayed = mtkView.currentDrawable?.texture
+    if let imageRef = lastDrawableDisplayed?.toImage() {
+      let uiImage = UIImage(cgImage: imageRef)
+      if let data = uiImage.jpegData(compressionQuality: 0.8) {
+        try? data.write(to: screenshotPath)
+      }
+    }
+  }
+
+  func getMeshExportFormat() -> Int {
+    // Get the format from settings.bundle
+    let val = UserDefaults.standard.integer(forKey: "meshExportFormat")
+    return val
   }
 }
