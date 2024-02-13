@@ -942,7 +942,7 @@ class SettingsListModal: UIScrollView {
 
     irAutoExposureSwitch?.addTarget(self, action: #selector(streamingPropertiesDidChange(_:)), for: .valueChanged)
 
-    irManualExposureSlider?.addTarget(self, action: #selector(streamingPropertiesDidChange(_:)), for: .touchUpInside)
+    irManualExposureSlider?.addTarget(self, action: #selector(streamingPropertiesDidChange(_:)), for: .valueChanged)
 
     irGainSegmentedControl?.addTarget(self, action: #selector(streamingPropertiesDidChange(_:)), for: .valueChanged)
 
