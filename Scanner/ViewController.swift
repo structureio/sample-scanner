@@ -853,6 +853,7 @@ extension ViewController: SettingsPopupViewDelegate {
     dynamicOptions.highResColoring = highResolutionColorEnabled
     dynamicOptions.depthStreamPreset = depthStreamPresetMode
     dynamicOptions.depthResolution = depthResolution
+    setupCaptureSession()
     captureSession.streamingEnabled = true
   }
 
