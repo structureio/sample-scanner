@@ -858,9 +858,10 @@ extension ViewController: SettingsPopupViewDelegate {
 
   func streamingPropertiesDidChange(_ irAutoExposureEnabled: Bool, irManualExposureValue: Float, irAnalogGainValue: STCaptureSessionSensorAnalogGainMode) {
     captureSession.properties = [
-      kSTCaptureSessionPropertySensorIRExposureModeKey: STCaptureSessionSensorExposureMode.autoAdjustAndLock.rawValue,
-      kSTCaptureSessionPropertySensorIRExposureValueKey: NSNumber(value: irManualExposureValue),
-      kSTCaptureSessionPropertySensorIRAnalogGainValueKey: NSNumber(value: irAnalogGainValue.rawValue)
+      kSTCaptureSessionPropertySensorIRExposureModeKey:
+      (irAutoExposureEnabled ? STCaptureSessionSensorExposureMode.auto.rawValue : STCaptureSessionSensorExposureMode.lockedToCustom.rawValue),
+      kSTCaptureSessionPropertySensorIRExposureValueKey: irManualExposureValue,
+      kSTCaptureSessionPropertySensorIRAnalogGainValueKey: irAnalogGainValue.rawValue
     ]
   }
 
