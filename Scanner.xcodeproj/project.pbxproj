@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3AE198132BC06C470029D2E0 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 3AE198122BC06C470029D2E0 /* PrivacyInfo.xcprivacy */; };
 		6A20656D2AD5468900552C0A /* MeshViewController+Mail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A20656C2AD5468900552C0A /* MeshViewController+Mail.swift */; };
 		6A2065992AD5544100552C0A /* ViewController+Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2065982AD5544100552C0A /* ViewController+Types.swift */; };
 		6A2CFED32AEEF969001510B7 /* ViewController+Metal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2CFED22AEEF969001510B7 /* ViewController+Metal.swift */; };
@@ -49,6 +50,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3AE198122BC06C470029D2E0 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		6A20656C2AD5468900552C0A /* MeshViewController+Mail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MeshViewController+Mail.swift"; sourceTree = "<group>"; };
 		6A2065982AD5544100552C0A /* ViewController+Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Types.swift"; sourceTree = "<group>"; };
 		6A2CFED22AEEF969001510B7 /* ViewController+Metal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Metal.swift"; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 				CED0CDD62372391F00CD4EBC /* AppDelegate.swift */,
 				CED0CDE12372392000CD4EBC /* LaunchScreen.storyboard */,
 				CED0CDE42372392000CD4EBC /* Info.plist */,
+				3AE198122BC06C470029D2E0 /* PrivacyInfo.xcprivacy */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -239,6 +242,7 @@
 				CE6CBF9B2A5E90DD000328C9 /* Settings.bundle in Resources */,
 				CED0CDDE2372391F00CD4EBC /* Main.storyboard in Resources */,
 				CED0CDE32372392000CD4EBC /* LaunchScreen.storyboard in Resources */,
+				3AE198132BC06C470029D2E0 /* PrivacyInfo.xcprivacy in Resources */,
 				CED0CDE02372392000CD4EBC /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
