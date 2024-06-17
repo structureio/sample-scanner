@@ -133,6 +133,9 @@ class ViewController: UIViewController, STBackgroundTaskDelegate, MeshViewDelega
 
     updateViewsWithSensorStatus()
 
+    batteryLevelCheckTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(batteryLevelCheckTick(_:)), userInfo: nil, repeats: true)
+    batteryLevelCheckTimer?.fire()
+      
     // We will connect to the sensor when we receive appDidBecomeActive.
   }
 
@@ -147,6 +150,11 @@ class ViewController: UIViewController, STBackgroundTaskDelegate, MeshViewDelega
     if slamState.scannerState == .scanning {
       resetButtonPressed(self)
     }
+  }
+    
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    batteryLevelCheckTimer?.invalidate()
   }
 
   override func didReceiveMemoryWarning() {
@@ -515,10 +523,6 @@ class ViewController: UIViewController, STBackgroundTaskDelegate, MeshViewDelega
         }
       }
     })
-
-    batteryLevelCheckTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(batteryLevelCheckTick(_:)), userInfo: nil, repeats: true)
-
-    batteryLevelCheckTimer?.fire()
   }
 
   func updateViewsWithSensorStatus() {
