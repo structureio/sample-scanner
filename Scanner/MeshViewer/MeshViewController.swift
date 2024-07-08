@@ -340,7 +340,9 @@ public class MeshViewController: UIViewController, UIGestureRecognizerDelegate {
     guard let meshExportFormat = exportExtensions[getMeshExportFormat()] else { return }
 
     // Setup paths and filenames.
-    let filename = String.localizedStringWithFormat("Model.%@", meshExportFormat)
+    let df = DateFormatter()
+    df.dateFormat = "MM-dd_HH.mm.ss"
+    let filename = String.localizedStringWithFormat("Model_%@.%@", df.string(from: Date()), meshExportFormat)
     let filePath = cacheDirectory.appendingPathComponent("\(filename)")
 
     let screenshotFilename = "Preview.jpg"
