@@ -860,13 +860,14 @@ extension ViewController: SettingsPopupViewDelegate {
     setupCaptureSession()
     captureSession.streamingEnabled = true
   }
-
-  func streamingPropertiesDidChange(_ irAutoExposureEnabled: Bool, irManualExposureValue: Float, irAnalogGainValue: STCaptureSessionSensorAnalogGainMode) {
+  
+  func streamingPropertiesDidChange(_ irAutoExposureEnabled: Bool, irManualExposureValue: Float, irAnalogGainValue: STCaptureSessionSensorAnalogGainMode, depthConfidenceThreshold: Int) {
     captureSession.properties = [
       kSTCaptureSessionPropertySensorIRExposureModeKey:
-      (irAutoExposureEnabled ? STCaptureSessionSensorExposureMode.auto.rawValue : STCaptureSessionSensorExposureMode.lockedToCustom.rawValue),
+        (irAutoExposureEnabled ? STCaptureSessionSensorExposureMode.auto.rawValue : STCaptureSessionSensorExposureMode.lockedToCustom.rawValue),
       kSTCaptureSessionPropertySensorIRExposureValueKey: irManualExposureValue,
-      kSTCaptureSessionPropertySensorIRAnalogGainValueKey: irAnalogGainValue.rawValue
+      kSTCaptureSessionPropertySensorIRAnalogGainValueKey: irAnalogGainValue.rawValue,
+      kSTCaptureSessionPropertySensorConfidenceThresholdKey: depthConfidenceThreshold
     ]
   }
 
