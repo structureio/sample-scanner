@@ -91,6 +91,8 @@ class CalibrationOverlay: UIView {
     isUserInteractionEnabled = true
 
     switch overlayType {
+    case .some(.nocalibration):
+      fallthrough
     case .none:
         layer.cornerRadius = 12.0
         let imageView = UIImageView(image: UIImage(named: "image-wvl-calibration"))
@@ -378,8 +380,6 @@ class CalibrationOverlay: UIView {
           // Set height to 50
           NSLayoutConstraint(item: calibrateButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 50.0)
         ])
-    case .some(.nocalibration):
-        print("No Calibration")
     }
   }
 
