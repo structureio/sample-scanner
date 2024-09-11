@@ -310,7 +310,7 @@ class SettingsListModal: UIScrollView {
 
     irManualExposureSlider?.value = 14
     
-    depthConfidenceThrehsoldSlider?.value = 7
+    depthConfidenceThrehsoldSlider?.value = 6
 
     irManualExposureSlider?.isEnabled = !(irAutoExposureSwitch?.isOn ?? false)
 
@@ -636,8 +636,8 @@ class SettingsListModal: UIScrollView {
       depthConfidenceThrehsoldSlider = UISlider()
       depthConfidenceThrehsoldSlider?.translatesAutoresizingMaskIntoConstraints = false
       depthConfidenceThrehsoldSlider?.tintColor = accentColor
-      depthConfidenceThrehsoldSlider?.minimumValue = 1.0
-      depthConfidenceThrehsoldSlider?.maximumValue = 16.0
+      depthConfidenceThrehsoldSlider?.minimumValue = 0.0
+      depthConfidenceThrehsoldSlider?.maximumValue = 7.0
       depthConfidenceThrehsoldSlider?.isUserInteractionEnabled = true
       
       confidenceThrehsoldMinLabel = UILabel()
@@ -650,7 +650,7 @@ class SettingsListModal: UIScrollView {
       confidenceThrehsoldMaxLabel?.translatesAutoresizingMaskIntoConstraints = false
       confidenceThrehsoldMaxLabel?.font = UIFont.systemFont(ofSize: fontHeightSmall, weight: .regular)
       confidenceThrehsoldMaxLabel?.textColor = sectionDividerColor
-      confidenceThrehsoldMaxLabel?.text = "15"
+      confidenceThrehsoldMaxLabel?.text = "7"
       
       if let depthConfidenceThrehsold = depthConfidenceThrehsoldSlider,
          let confidenceThrehsoldMinLabel = confidenceThrehsoldMinLabel,
@@ -1069,7 +1069,7 @@ class SettingsListModal: UIScrollView {
         fatalError("Unknown index found on gain setting.")
     }
 
-    popDelegate?.streamingPropertiesDidChange(irAutoExposureSwitch?.isOn ?? false, irManualExposureValue: (irManualExposureSlider?.value ?? 0.0) / 1000 /* send value in seconds */, irAnalogGainValue: gainMode, depthConfidenceThreshold: Int(depthConfidenceThrehsoldSlider?.value ?? 7.0))
+    popDelegate?.streamingPropertiesDidChange(irAutoExposureSwitch?.isOn ?? false, irManualExposureValue: (irManualExposureSlider?.value ?? 0.0) / 1000 /* send value in seconds */, irAnalogGainValue: gainMode, depthConfidenceThreshold: Int(depthConfidenceThrehsoldSlider?.value ?? 6.0))
   }
 
   func trackerSettingsDidChange(_ sender: Any?) {
