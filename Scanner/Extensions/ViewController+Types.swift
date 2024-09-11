@@ -39,7 +39,7 @@ struct DynamicOptions {
   var depthAndColorTrackerIsOn: Bool = true
   var highResColoring: Bool = true
   var improvedMapperIsOn: Bool = true
-  var highResMapping: Bool = true
+  var highResMapping: Bool = false
 
   var depthStreamPreset: STCaptureSessionPreset = .default
   var depthResolution: STCaptureSessionDepthFrameResolution = .resolution640x480

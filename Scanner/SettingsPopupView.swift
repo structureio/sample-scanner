@@ -322,7 +322,7 @@ class SettingsListModal: UIScrollView {
 
     trackerTypeSegmentedControl?.selectedSegmentIndex = 0
 
-    highResolutionMeshSwitch?.isOn = true
+    highResolutionMeshSwitch?.isOn = false
 
     improvedMapperSwitch?.isOn = true
 
