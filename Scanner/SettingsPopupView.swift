@@ -302,11 +302,11 @@ class SettingsListModal: UIScrollView {
     setupUIComponentsAndLayout()
 
     // Default option states
-    depthResolutionSegmentedControl?.selectedSegmentIndex = 1
+    depthResolutionSegmentedControl?.selectedSegmentIndex = 0
 
     highResolutionColorSwitch?.isOn = true
 
-    irAutoExposureSwitch?.isOn = true
+    irAutoExposureSwitch?.isOn = false
 
     irManualExposureSlider?.value = 14
     
@@ -433,12 +433,13 @@ class SettingsListModal: UIScrollView {
         NSLayoutConstraint(item: depthResolutionLabel, attribute: .leading, relatedBy: .equal, toItem: depthResolutionLabel.superview, attribute: .leadingMargin, multiplier: 1.0, constant: 0.0)
       ])
 
-      depthResolutionSegmentedControl = UISegmentedControl(items: ["QVGA", "VGA", "Full"])
+      depthResolutionSegmentedControl = UISegmentedControl(items: ["Full"])
       depthResolutionSegmentedControl?.translatesAutoresizingMaskIntoConstraints = false
       depthResolutionSegmentedControl?.clipsToBounds = true
       depthResolutionSegmentedControl?.isUserInteractionEnabled = true
       depthResolutionSegmentedControl?.backgroundColor = controlBackgroundColor
       depthResolutionSegmentedControl?.selectedSegmentTintColor = accentColor
+      depthResolutionSegmentedControl?.isEnabled = false
 
       depthResolutionSegmentedControl?.setTitleTextAttributes([
         NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontHeight, weight: .medium),
@@ -515,7 +516,8 @@ class SettingsListModal: UIScrollView {
       irAutoExposureLabel.translatesAutoresizingMaskIntoConstraints = false
       irAutoExposureLabel.font = UIFont.systemFont(ofSize: fontHeight, weight: .medium)
       irAutoExposureLabel.textColor = headerTextColor
-      irAutoExposureLabel.text = "IR Auto Exposure (Mark II only)"
+      irAutoExposureLabel.text = "IR Auto Exposure"
+      irAutoExposureLabel.isEnabled = false
       streamingSettingsView.addSubview(irAutoExposureLabel)
 
       irAutoExposureLabel.superview?.addConstraints([
@@ -553,7 +555,7 @@ class SettingsListModal: UIScrollView {
       irManualExposureLabel.translatesAutoresizingMaskIntoConstraints = false
       irManualExposureLabel.font = UIFont.systemFont(ofSize: fontHeight, weight: .medium)
       irManualExposureLabel.textColor = headerTextColor
-      irManualExposureLabel.text = "IR Manual Exposure (Mark II only)"
+      irManualExposureLabel.text = "IR Manual Exposure"
       streamingSettingsView.addSubview(irManualExposureLabel)
 
       irManualExposureLabel.superview?.addConstraints([
@@ -690,7 +692,7 @@ class SettingsListModal: UIScrollView {
       irGainLabel.translatesAutoresizingMaskIntoConstraints = false
       irGainLabel.font = UIFont.systemFont(ofSize: fontHeight, weight: .medium)
       irGainLabel.textColor = headerTextColor
-      irGainLabel.text = "IR Analog Gain (Mark II only)"
+      irGainLabel.text = "IR Analog Gain"
       streamingSettingsView.addSubview(irGainLabel)
 
       irGainLabel.superview?.addConstraints([
@@ -741,7 +743,7 @@ class SettingsListModal: UIScrollView {
       streamPresetLabel.translatesAutoresizingMaskIntoConstraints = false
       streamPresetLabel.font = UIFont.systemFont(ofSize: fontHeight, weight: .medium)
       streamPresetLabel.textColor = headerTextColor
-      streamPresetLabel.text = "Depth Stream Preset (Mark II only)"
+      streamPresetLabel.text = "Depth Stream Preset"
       streamingSettingsView.addSubview(streamPresetLabel)
 
       streamPresetLabel.superview?.addConstraints([
@@ -1096,9 +1098,9 @@ class SettingsListModal: UIScrollView {
 
   func enableAllSettingsDuringCubePlacement() {
     highResolutionColorSwitch?.isEnabled = true
-    irAutoExposureSwitch?.isEnabled = true
+    irAutoExposureSwitch?.isEnabled = false
     irManualExposureSlider?.isEnabled = true
-    irGainSegmentedControl?.isEnabled = true
+    irGainSegmentedControl?.isEnabled = false
     streamPresetDropControl?.isUserInteractionEnabled = true
     trackerTypeSegmentedControl?.isEnabled = true
     highResolutionMeshSwitch?.isEnabled = true
