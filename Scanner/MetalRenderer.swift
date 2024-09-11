@@ -20,7 +20,7 @@ struct RenderingOptions: OptionSet {
   static let depthFrame = RenderingOptions(rawValue: 1 << 6)
 
   static let cubePlacement: RenderingOptions = [.colorFrame, .depthOverlay, .cube]
-  static let scanning: RenderingOptions = [.colorFrame, .mesh, .cube]
+  static let scanning: RenderingOptions = [.colorFrame, .depthOverlay, .mesh, .cube]
   static let viewing: RenderingOptions = []
 }
 
