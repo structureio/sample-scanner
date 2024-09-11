@@ -41,7 +41,7 @@ struct DynamicOptions {
   var improvedMapperIsOn: Bool = true
   var highResMapping: Bool = false
 
-  var depthStreamPreset: STCaptureSessionPreset = .default
+  var depthStreamPreset: STCaptureSessionPreset = .bodyScanning
   var depthResolution: STCaptureSessionDepthFrameResolution = .resolution640x480
 }
 

@@ -316,7 +316,7 @@ class SettingsListModal: UIScrollView {
 
     irGainSegmentedControl?.selectedSegmentIndex = 2
 
-    streamPresetDropControl?.selectedIndex = 0
+    streamPresetDropControl?.selectedIndex = 1
 
     slamOptionSegmentedControl?.selectedSegmentIndex = 0
 
@@ -1034,7 +1034,7 @@ class SettingsListModal: UIScrollView {
       return
     }
 
-    let presetMode = STCaptureSessionPreset(rawValue: streamPresetDropControl?.selectedIndex ?? 0)!
+    let presetMode = STCaptureSessionPreset(rawValue: streamPresetDropControl?.selectedIndex ?? 1)!
     let depthResolution = STCaptureSessionDepthFrameResolution(rawValue: (depthResolutionSegmentedControl?.selectedSegmentIndex ?? 0) + 1)!
 
     popDelegate?.streamingSettingsDidChange(highResolutionColorSwitch?.isOn ?? false, depthResolution: depthResolution, depthStreamPresetMode: presetMode)
