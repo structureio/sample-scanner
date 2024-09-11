@@ -76,7 +76,7 @@ class Options {
   var prioritizeFirstFrameColor: Bool = true
 
   // Target number of faces of the final textured mesh.
-  var colorizerTargetNumFaces: Int = 50000
+  var colorizerTargetNumFaces: Int = 500000
 
   // Focus position for the color camera (between 0 and 1). Must remain fixed one depth streaming
   // has started when using hardware registered depth.
