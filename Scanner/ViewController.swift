@@ -45,6 +45,7 @@ class ViewController: UIViewController, STBackgroundTaskDelegate, MeshViewDelega
   var depthWindowSearchWidth: Float = 15
   var depthWindowSearchHeight: Float = 11
   var runDepthRefinement: Bool = false
+  var st01CompatibilityMode: Bool = false
   var settingsPopupView: SettingsPopupView?
   var calibrationOverlay: CalibrationOverlay?
   
@@ -111,6 +112,7 @@ class ViewController: UIViewController, STBackgroundTaskDelegate, MeshViewDelega
       depthWindowSearchWidth = defaults.float(forKey: "depthWindowSearchWidth")
       depthWindowSearchHeight = defaults.float(forKey: "depthWindowSearchHeight")
     }
+    st01CompatibilityMode = defaults.bool(forKey: "st01CompatibilityMode")
 
     setupMetal()
     setupGestures()
@@ -553,7 +555,11 @@ class ViewController: UIViewController, STBackgroundTaskDelegate, MeshViewDelega
         self.view.bringSubviewToFront(sensorRequiredImageView)
         sensorRequiredImageView.isHidden = false
       } else {
-        showAppStatusMessage(appStatus.pleaseConnectSensorMessage)
+        if st01CompatibilityMode {
+          showAppStatusMessage(appStatus.pleaseConnectOriginalSensorMessage)
+        } else {
+          showAppStatusMessage(appStatus.pleaseConnectSensor3Message)
+        }
       }
       return
     }

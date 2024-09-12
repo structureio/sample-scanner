@@ -113,7 +113,8 @@ struct PinchScaleState {
 }
 
 struct AppStatus {
-  var pleaseConnectSensorMessage = "Please connect Structure Sensor."
+  var pleaseConnectOriginalSensorMessage = "Please connect Original Structure Sensor"
+  var pleaseConnectSensor3Message = "Please connect Structure Sensor 3"
   var pleaseChargeSensorMessage = "Please charge Structure Sensor."
   var needColorCameraAccessMessage = "This app requires camera access to capture color.\nAllow access by going to Settings → Privacy → Camera."
   var needLicenseMessage = "This app requires Structure SDK license."
