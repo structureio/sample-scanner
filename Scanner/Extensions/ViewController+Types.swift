@@ -39,9 +39,9 @@ struct DynamicOptions {
   var depthAndColorTrackerIsOn: Bool = true
   var highResColoring: Bool = true
   var improvedMapperIsOn: Bool = true
-  var highResMapping: Bool = true
+  var highResMapping: Bool = false
 
-  var depthStreamPreset: STCaptureSessionPreset = .default
+  var depthStreamPreset: STCaptureSessionPreset = .bodyScanning
   var depthResolution: STCaptureSessionDepthFrameResolution = .resolution640x480
 }
 
@@ -76,7 +76,7 @@ class Options {
   var prioritizeFirstFrameColor: Bool = true
 
   // Target number of faces of the final textured mesh.
-  var colorizerTargetNumFaces: Int = 50000
+  var colorizerTargetNumFaces: Int = 500000
 
   // Focus position for the color camera (between 0 and 1). Must remain fixed one depth streaming
   // has started when using hardware registered depth.
@@ -113,7 +113,8 @@ struct PinchScaleState {
 }
 
 struct AppStatus {
-  var pleaseConnectSensorMessage = "Please connect Structure Sensor."
+  var pleaseConnectOriginalSensorMessage = "Please connect Original Structure Sensor"
+  var pleaseConnectSensor3Message = "Please connect Structure Sensor 3"
   var pleaseChargeSensorMessage = "Please charge Structure Sensor."
   var needColorCameraAccessMessage = "This app requires camera access to capture color.\nAllow access by going to Settings → Privacy → Camera."
   var needLicenseMessage = "This app requires Structure SDK license."

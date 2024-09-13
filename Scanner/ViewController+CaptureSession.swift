@@ -93,7 +93,8 @@ extension ViewController: STCaptureSessionDelegate {
       kSTCaptureSessionOptionUseAppleCoreMotionKey: NSNumber(value: true),
       kSTCaptureSessionOptionDepthStreamPresetKey: NSNumber(value: dynamicOptions.depthStreamPreset.rawValue),
       kSTCaptureSessionOptionSimulateRealtimePlaybackKey: NSNumber(value: true),
-      kSTCaptureSessionOptionDepthSearchWindowKey: [NSNumber(value: depthWindowSearchWidth), NSNumber(value: depthWindowSearchHeight)]
+      kSTCaptureSessionOptionDepthSearchWindowKey: [NSNumber(value: depthWindowSearchWidth), NSNumber(value: depthWindowSearchHeight)],
+      kSTCaptureSessionOptionST01CompatibilityKey: st01CompatibilityMode
     ] as [String: Any]
 
     // Set the lens detector off, and default lens state as "non-WVL" mode

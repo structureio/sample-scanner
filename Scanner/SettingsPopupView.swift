@@ -9,7 +9,7 @@ import UIKit
 
 protocol SettingsPopupViewDelegate: AnyObject {
   func streamingSettingsDidChange(_ highResolutionColorEnabled: Bool, depthResolution: STCaptureSessionDepthFrameResolution, depthStreamPresetMode: STCaptureSessionPreset)
-  func streamingPropertiesDidChange(_ irAutoExposureEnabled: Bool, irManualExposureValue: Float, irAnalogGainValue: STCaptureSessionSensorAnalogGainMode)
+  func streamingPropertiesDidChange(_ irAutoExposureEnabled: Bool, irManualExposureValue: Float, irAnalogGainValue: STCaptureSessionSensorAnalogGainMode, depthConfidenceThreshold: Int)
   func trackerSettingsDidChange(_ rgbdTrackingEnabled: Bool)
   func mapperSettingsDidChange(_ highResolutionMeshEnabled: Bool, improvedMapperEnabled: Bool)
 }
@@ -279,6 +279,7 @@ class SettingsListModal: UIScrollView {
   private var irAutoExposureSwitch: UISwitch?
   private var irManualExposureSlider: UISlider?
   private var irGainSegmentedControl: UISegmentedControl?
+  private var depthConfidenceThrehsoldSlider: UISlider?
 
   private var streamPresetDropControl: DropDownView?
   private var slamOptionSegmentedControl: UISegmentedControl?
@@ -289,6 +290,9 @@ class SettingsListModal: UIScrollView {
 
   private var irExposureMaximumValueLabel: UILabel?
   private var irExposureMinimumValueLabel: UILabel?
+  
+  private var confidenceThrehsoldMaxLabel: UILabel?
+  private var confidenceThrehsoldMinLabel: UILabel?
 
   init(settingsPopupViewDelegate delegate: SettingsPopupViewDelegate?) {
     super.init(frame: CGRect.zero)
@@ -298,25 +302,27 @@ class SettingsListModal: UIScrollView {
     setupUIComponentsAndLayout()
 
     // Default option states
-    depthResolutionSegmentedControl?.selectedSegmentIndex = 1
+    depthResolutionSegmentedControl?.selectedSegmentIndex = 0
 
     highResolutionColorSwitch?.isOn = true
 
-    irAutoExposureSwitch?.isOn = true
+    irAutoExposureSwitch?.isOn = false
 
     irManualExposureSlider?.value = 14
+    
+    depthConfidenceThrehsoldSlider?.value = 6
 
     irManualExposureSlider?.isEnabled = !(irAutoExposureSwitch?.isOn ?? false)
 
     irGainSegmentedControl?.selectedSegmentIndex = 2
 
-    streamPresetDropControl?.selectedIndex = 0
+    streamPresetDropControl?.selectedIndex = 1
 
     slamOptionSegmentedControl?.selectedSegmentIndex = 0
 
     trackerTypeSegmentedControl?.selectedSegmentIndex = 0
 
-    highResolutionMeshSwitch?.isOn = true
+    highResolutionMeshSwitch?.isOn = false
 
     improvedMapperSwitch?.isOn = true
 
@@ -427,12 +433,13 @@ class SettingsListModal: UIScrollView {
         NSLayoutConstraint(item: depthResolutionLabel, attribute: .leading, relatedBy: .equal, toItem: depthResolutionLabel.superview, attribute: .leadingMargin, multiplier: 1.0, constant: 0.0)
       ])
 
-      depthResolutionSegmentedControl = UISegmentedControl(items: ["QVGA", "VGA", "Full"])
+      depthResolutionSegmentedControl = UISegmentedControl(items: ["Full"])
       depthResolutionSegmentedControl?.translatesAutoresizingMaskIntoConstraints = false
       depthResolutionSegmentedControl?.clipsToBounds = true
       depthResolutionSegmentedControl?.isUserInteractionEnabled = true
       depthResolutionSegmentedControl?.backgroundColor = controlBackgroundColor
       depthResolutionSegmentedControl?.selectedSegmentTintColor = accentColor
+      depthResolutionSegmentedControl?.isEnabled = false
 
       depthResolutionSegmentedControl?.setTitleTextAttributes([
         NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontHeight, weight: .medium),
@@ -509,7 +516,8 @@ class SettingsListModal: UIScrollView {
       irAutoExposureLabel.translatesAutoresizingMaskIntoConstraints = false
       irAutoExposureLabel.font = UIFont.systemFont(ofSize: fontHeight, weight: .medium)
       irAutoExposureLabel.textColor = headerTextColor
-      irAutoExposureLabel.text = "IR Auto Exposure (Mark II only)"
+      irAutoExposureLabel.text = "IR Auto Exposure"
+      irAutoExposureLabel.isEnabled = false
       streamingSettingsView.addSubview(irAutoExposureLabel)
 
       irAutoExposureLabel.superview?.addConstraints([
@@ -547,7 +555,7 @@ class SettingsListModal: UIScrollView {
       irManualExposureLabel.translatesAutoresizingMaskIntoConstraints = false
       irManualExposureLabel.font = UIFont.systemFont(ofSize: fontHeight, weight: .medium)
       irManualExposureLabel.textColor = headerTextColor
-      irManualExposureLabel.text = "IR Manual Exposure (Mark II only)"
+      irManualExposureLabel.text = "IR Manual Exposure"
       streamingSettingsView.addSubview(irManualExposureLabel)
 
       irManualExposureLabel.superview?.addConstraints([
@@ -603,13 +611,77 @@ class SettingsListModal: UIScrollView {
           NSLayoutConstraint(item: irExposureMaximumValueLabel, attribute: .left, relatedBy: .equal, toItem: irManualExposureSlider, attribute: .right, multiplier: 1.0, constant: 2*marginSize)
         ])
       }
+      
+      let streamingHR22 = createHorizontalRule(1.0)
+      streamingHR22.backgroundColor = sectionDividerColor
+      streamingSettingsView.addSubview(streamingHR22)
+      
+      streamingHR22.superview?.addConstraints([ 
+        NSLayoutConstraint(item: streamingHR22, attribute: .top, relatedBy: .equal, toItem: irManualExposureSlider, attribute: .bottom, multiplier: 1.0, constant: marginSize),
+        NSLayoutConstraint(item: streamingHR22, attribute: .centerX, relatedBy: .equal, toItem: streamingHR22.superview, attribute: .centerX, multiplier: 1.0, constant: 0.0),
+        NSLayoutConstraint(item: streamingHR22, attribute: .width, relatedBy: .equal, toItem: streamingHR22.superview, attribute: .width, multiplier: 0.9, constant: 0.0)
+      ])
+      
+      let depthConfidenceLabel = UILabel()
+      depthConfidenceLabel.translatesAutoresizingMaskIntoConstraints = false
+      depthConfidenceLabel.font = UIFont.systemFont(ofSize: fontHeight, weight: .medium)
+      depthConfidenceLabel.textColor = headerTextColor
+      depthConfidenceLabel.text = "Depth Confidence Threshold"
+      streamingSettingsView.addSubview(depthConfidenceLabel)
+      
+      depthConfidenceLabel.superview?.addConstraints([
+        NSLayoutConstraint(item: depthConfidenceLabel, attribute: .top, relatedBy: .equal, toItem: streamingHR22, attribute: .bottom, multiplier: 1.0, constant: marginSize),
+        // Pin leading edge of IR manual exposure label to its superview's leading margin
+        NSLayoutConstraint(item: depthConfidenceLabel, attribute: .leading, relatedBy: .equal, toItem: irManualExposureLabel.superview, attribute: .leadingMargin, multiplier: 1.0, constant: 0.0)
+      ])
+      
+      depthConfidenceThrehsoldSlider = UISlider()
+      depthConfidenceThrehsoldSlider?.translatesAutoresizingMaskIntoConstraints = false
+      depthConfidenceThrehsoldSlider?.tintColor = accentColor
+      depthConfidenceThrehsoldSlider?.minimumValue = 0.0
+      depthConfidenceThrehsoldSlider?.maximumValue = 7.0
+      depthConfidenceThrehsoldSlider?.isUserInteractionEnabled = true
+      
+      confidenceThrehsoldMinLabel = UILabel()
+      confidenceThrehsoldMinLabel?.translatesAutoresizingMaskIntoConstraints = false
+      confidenceThrehsoldMinLabel?.font = UIFont.systemFont(ofSize: fontHeightSmall, weight: .regular)
+      confidenceThrehsoldMinLabel?.textColor = sectionDividerColor
+      confidenceThrehsoldMinLabel?.text = "0"
+      
+      confidenceThrehsoldMaxLabel = UILabel()
+      confidenceThrehsoldMaxLabel?.translatesAutoresizingMaskIntoConstraints = false
+      confidenceThrehsoldMaxLabel?.font = UIFont.systemFont(ofSize: fontHeightSmall, weight: .regular)
+      confidenceThrehsoldMaxLabel?.textColor = sectionDividerColor
+      confidenceThrehsoldMaxLabel?.text = "7"
+      
+      if let depthConfidenceThrehsold = depthConfidenceThrehsoldSlider,
+         let confidenceThrehsoldMinLabel = confidenceThrehsoldMinLabel,
+         let confidenceThrehsoldMaxLabel = confidenceThrehsoldMaxLabel
+      {
+        
+        streamingSettingsView.addSubview(confidenceThrehsoldMinLabel)
+        streamingSettingsView.addSubview(confidenceThrehsoldMaxLabel)
+        streamingSettingsView.addSubview(depthConfidenceThrehsold)
+        
+        depthConfidenceThrehsold.superview?.addConstraints([
+          NSLayoutConstraint(item: depthConfidenceThrehsold, attribute: .top, relatedBy: .equal, toItem: depthConfidenceLabel, attribute: .bottom, multiplier: 1.0, constant: marginSize),
+          NSLayoutConstraint(item: depthConfidenceThrehsold, attribute: .centerY, relatedBy: .equal, toItem: depthConfidenceLabel, attribute: .bottom, multiplier: 1.0, constant: 2*marginSize),
+          NSLayoutConstraint(item: confidenceThrehsoldMinLabel, attribute: .centerY, relatedBy: .equal, toItem: depthConfidenceThrehsold, attribute: .centerY, multiplier: 1.0, constant: 0.0),
+          NSLayoutConstraint(item: confidenceThrehsoldMinLabel, attribute: .left, relatedBy: .equal, toItem: confidenceThrehsoldMinLabel.superview, attribute: .leftMargin, multiplier: 1.0, constant: 0.0),
+          
+          NSLayoutConstraint(item: depthConfidenceThrehsold, attribute: .left, relatedBy: .equal, toItem: confidenceThrehsoldMinLabel, attribute: .right, multiplier: 1.0, constant: 2*marginSize),
+          NSLayoutConstraint(item: confidenceThrehsoldMaxLabel, attribute: .centerY, relatedBy: .equal, toItem: depthConfidenceThrehsold, attribute: .centerY, multiplier: 1.0, constant: 0.0),
+          NSLayoutConstraint(item: confidenceThrehsoldMaxLabel, attribute: .right, relatedBy: .equal, toItem: confidenceThrehsoldMaxLabel.superview, attribute: .rightMargin, multiplier: 1.0, constant: 0.0),
+          NSLayoutConstraint(item: confidenceThrehsoldMaxLabel, attribute: .left, relatedBy: .equal, toItem: depthConfidenceThrehsold, attribute: .right, multiplier: 1.0, constant: 2*marginSize)
+        ])
+      }
 
       let streamingHR3 = createHorizontalRule(1.0)
       streamingHR3.backgroundColor = sectionDividerColor
       streamingSettingsView.addSubview(streamingHR3)
 
       streamingHR3.superview?.addConstraints([
-        NSLayoutConstraint(item: streamingHR3, attribute: .top, relatedBy: .equal, toItem: irManualExposureSlider, attribute: .bottom, multiplier: 1.0, constant: marginSize),
+        NSLayoutConstraint(item: streamingHR3, attribute: .top, relatedBy: .equal, toItem: depthConfidenceThrehsoldSlider, attribute: .bottom, multiplier: 1.0, constant: marginSize),
         // Pin leading edge of HR2 to superview
         NSLayoutConstraint(item: streamingHR3, attribute: .centerX, relatedBy: .equal, toItem: streamingHR3.superview, attribute: .centerX, multiplier: 1.0, constant: 0.0),
         // Set width of HR2 to equal that of 90% of the superview
@@ -620,7 +692,7 @@ class SettingsListModal: UIScrollView {
       irGainLabel.translatesAutoresizingMaskIntoConstraints = false
       irGainLabel.font = UIFont.systemFont(ofSize: fontHeight, weight: .medium)
       irGainLabel.textColor = headerTextColor
-      irGainLabel.text = "IR Analog Gain (Mark II only)"
+      irGainLabel.text = "IR Analog Gain"
       streamingSettingsView.addSubview(irGainLabel)
 
       irGainLabel.superview?.addConstraints([
@@ -671,7 +743,7 @@ class SettingsListModal: UIScrollView {
       streamPresetLabel.translatesAutoresizingMaskIntoConstraints = false
       streamPresetLabel.font = UIFont.systemFont(ofSize: fontHeight, weight: .medium)
       streamPresetLabel.textColor = headerTextColor
-      streamPresetLabel.text = "Depth Stream Preset (Mark II only)"
+      streamPresetLabel.text = "Depth Stream Preset"
       streamingSettingsView.addSubview(streamPresetLabel)
 
       streamPresetLabel.superview?.addConstraints([
@@ -943,6 +1015,8 @@ class SettingsListModal: UIScrollView {
     irAutoExposureSwitch?.addTarget(self, action: #selector(streamingPropertiesDidChange(_:)), for: .valueChanged)
 
     irManualExposureSlider?.addTarget(self, action: #selector(streamingPropertiesDidChange(_:)), for: .valueChanged)
+    
+    depthConfidenceThrehsoldSlider?.addTarget(self, action: #selector(streamingPropertiesDidChange(_:)), for: .valueChanged)
 
     irGainSegmentedControl?.addTarget(self, action: #selector(streamingPropertiesDidChange(_:)), for: .valueChanged)
 
@@ -960,7 +1034,7 @@ class SettingsListModal: UIScrollView {
       return
     }
 
-    let presetMode = STCaptureSessionPreset(rawValue: streamPresetDropControl?.selectedIndex ?? 0)!
+    let presetMode = STCaptureSessionPreset(rawValue: streamPresetDropControl?.selectedIndex ?? 1)!
     let depthResolution = STCaptureSessionDepthFrameResolution(rawValue: (depthResolutionSegmentedControl?.selectedSegmentIndex ?? 0) + 1)!
 
     popDelegate?.streamingSettingsDidChange(highResolutionColorSwitch?.isOn ?? false, depthResolution: depthResolution, depthStreamPresetMode: presetMode)
@@ -997,7 +1071,7 @@ class SettingsListModal: UIScrollView {
         fatalError("Unknown index found on gain setting.")
     }
 
-    popDelegate?.streamingPropertiesDidChange(irAutoExposureSwitch?.isOn ?? false, irManualExposureValue: (irManualExposureSlider?.value ?? 0.0) / 1000 /* send value in seconds */, irAnalogGainValue: gainMode)
+    popDelegate?.streamingPropertiesDidChange(irAutoExposureSwitch?.isOn ?? false, irManualExposureValue: (irManualExposureSlider?.value ?? 0.0) / 1000 /* send value in seconds */, irAnalogGainValue: gainMode, depthConfidenceThreshold: Int(depthConfidenceThrehsoldSlider?.value ?? 6.0))
   }
 
   func trackerSettingsDidChange(_ sender: Any?) {
@@ -1024,9 +1098,9 @@ class SettingsListModal: UIScrollView {
 
   func enableAllSettingsDuringCubePlacement() {
     highResolutionColorSwitch?.isEnabled = true
-    irAutoExposureSwitch?.isEnabled = true
+    irAutoExposureSwitch?.isEnabled = false
     irManualExposureSlider?.isEnabled = true
-    irGainSegmentedControl?.isEnabled = true
+    irGainSegmentedControl?.isEnabled = false
     streamPresetDropControl?.isUserInteractionEnabled = true
     trackerTypeSegmentedControl?.isEnabled = true
     highResolutionMeshSwitch?.isEnabled = true

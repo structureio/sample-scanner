@@ -124,13 +124,13 @@ extension ViewController {
     }
 
     // Here, we set a larger volume bounds size when mapping in high resolution.
-    let lowResolutionVolumeBounds: Float = 125
-    let highResolutionVolumeBounds: Float = 200
+    let mediumResolutionVolumeBounds: Float = 256
+    let highResolutionVolumeBounds: Float = 300
 
-    var voxelSizeInMeters = options.volumeSizeInMeters.x / (dynamicOptions.highResMapping ? highResolutionVolumeBounds : lowResolutionVolumeBounds)
+    var voxelSizeInMeters = options.volumeSizeInMeters.x / (dynamicOptions.highResMapping ? highResolutionVolumeBounds : mediumResolutionVolumeBounds)
 
     // Avoid voxels that are too small - these become too noisy.
-    voxelSizeInMeters = keep(inRange: voxelSizeInMeters, minValue: 0.003, maxValue: 0.2)
+    voxelSizeInMeters = keep(inRange: voxelSizeInMeters, minValue: 0.002, maxValue: 0.2)
 
     // Compute the volume bounds in voxels, as a multiple of the volume resolution.
     var volumeBounds = GLKVector3()
@@ -220,10 +220,7 @@ extension ViewController {
 
   func processDepthFrame(_ depthFrame: STDepthFrame, colorFrameOrNil colorFrame: STColorFrame?) {
     if options.applyExpensiveCorrectionToDepth {
-      let couldApplyCorrection = depthFrame.applyExpensiveCorrection()
-      if !couldApplyCorrection {
-        print("Warning: could not improve depth map accuracy, is your firmware too old?")
-      }
+      depthFrame.applyExpensiveCorrection()
     }
 
     if runDepthRefinement {
