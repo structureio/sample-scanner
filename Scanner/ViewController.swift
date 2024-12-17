@@ -635,9 +635,6 @@ class ViewController: UIViewController, STBackgroundTaskDelegate, MeshViewDelega
     }
 
     firmwareUpdateView.isHidden = !needToUpgradeFirmware
-
-    // If we reach this point, no status to show.
-    hideAppStatusMessage()
   }
 
   @IBAction func panGesture(_ gestureRecognizer: UIPanGestureRecognizer) {

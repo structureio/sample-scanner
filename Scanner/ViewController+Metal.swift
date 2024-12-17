@@ -12,7 +12,12 @@ import StructureKit
 extension ViewController {
 
   func renderWithMetal(for depthFrame: STDepthFrame, colorFrameOrNil colorFrame: STColorFrame?) {
-
+    
+    // Remove the status message
+    if !self.appStatusMessageLabel.isHidden {
+      hideAppStatusMessage()
+    }
+      
     if let colorFrame = colorFrame {
       // Render the color image and depth
       metalData.update(colorFrame: colorFrame)
