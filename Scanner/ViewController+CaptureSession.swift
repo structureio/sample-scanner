@@ -16,10 +16,15 @@ extension ViewController: STCaptureSessionDelegate {
     // However, older devices may only support this format at a lower framerate.
     // In your Structure Sensor is on firmware 2.0+, it supports depth capture at FPS of 24.
 
-    let testVideoDevice = AVCaptureDevice.default(for: .video)
-    if testVideoDevice == nil {
-      fatalError("No video device")
-    }
+      let testVideoDevice = AVCaptureDevice.default(for: .video)
+      if testVideoDevice == nil
+      {
+  #if targetEnvironment(simulator)
+          return false;
+  #else
+          fatalError("No video device")
+  #endif
+      }
 
     for format in testVideoDevice?.formats ?? [] {
       let firstFrameRateRange = format.videoSupportedFrameRateRanges[0]
