@@ -7,63 +7,61 @@ import AVFoundation
 import Structure
 import UIKit
 
+struct FormatDescription: Hashable, CustomStringConvertible {
+  var width: Int32
+  var height: Int32
+  var maxFps: Double
+  var binning: Bool
+  var arkitFormat: ARConfiguration.VideoFormat?
+
+  static var VGA: FormatDescription { FormatDescription(width: 640, height: 480, maxFps: 30, binning: false) }
+
+  // Hashable
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(width)
+    hasher.combine(height)
+    hasher.combine(maxFps)
+    hasher.combine(binning)
+  }
+
+  // CustomStringConvertible
+  var description: String {
+    if binning {
+      return String("\(width)x\(height)@\(maxFps) binned")
+    } else {
+      return String("\(width)x\(height)@\(maxFps)")
+    }
+  }
+}
+
 extension ViewController: STCaptureSessionDelegate {
   // MARK: - Capture Session Setup
 
-  func videoDeviceSupportsHighResColor() -> Bool {
-    // High Resolution Color format is width 2592, height 1936.
-    // Most recent devices support this format at 30 FPS.
-    // However, older devices may only support this format at a lower framerate.
-    // In your Structure Sensor is on firmware 2.0+, it supports depth capture at FPS of 24.
-
-      let testVideoDevice = AVCaptureDevice.default(for: .video)
-      if testVideoDevice == nil
-      {
-  #if targetEnvironment(simulator)
-          return false;
-  #else
-          fatalError("No video device")
-  #endif
-      }
-
-    for format in testVideoDevice?.formats ?? [] {
-      let firstFrameRateRange = format.videoSupportedFrameRateRanges[0]
-
-      let formatMinFps = firstFrameRateRange.minFrameRate
-      let formatMaxFps = firstFrameRateRange.maxFrameRate
-
-      if (formatMaxFps < 15) /* Max framerate too low. */ || (formatMinFps > 30) /* Min framerate too high. */ || (formatMaxFps == 24 && formatMinFps > 15) /* We can neither do the 24 FPS max framerate, nor fall back to 15. */ {
-        continue
-      }
-
-      let videoFormatDesc = format.formatDescription
-      let fourCharCode = CMFormatDescriptionGetMediaSubType(videoFormatDesc)
-
-      let formatDims = CMVideoFormatDescriptionGetDimensions(videoFormatDesc)
-
-      if formatDims.width != 2592 {
-        continue
-      }
-
-      if formatDims.height != 1936 {
-        continue
-      }
-
-      if format.isVideoBinned {
-        continue
-      }
-
-      // we only support full range YCbCr for now
-      if fourCharCode != 875704422 {
-        continue
-      }
-
-      // All requirements met.
-      return true
+  func getColorAVFormats(
+    _ videoDevice: AVCaptureDevice, ratio: Float = 0.75, minFps: Double = 30, depthCompatible: Bool = true
+  ) -> [FormatDescription] {
+    let eps: Float = 1e-5
+    let filtered: [AVCaptureDevice.Format] = videoDevice.formats.filter {
+      let dims = CMVideoFormatDescriptionGetDimensions($0.formatDescription)
+      let frameRatio = Float(dims.height) / Float(dims.width)
+      let ratioOk = ratio == 0 || abs(frameRatio - ratio) < eps
+      return CMFormatDescriptionGetMediaSubType($0.formatDescription) == kCVPixelFormatType_420YpCbCr8BiPlanarFullRange
+        && (abs(Float(dims.height) / Float(dims.width) - ratio) < eps) // 4x3 ratio
+        && ratioOk
+        && $0.videoSupportedFrameRateRanges[0].maxFrameRate >= minFps
     }
 
-    // No acceptable high-res format was found.
-    return false
+    let sorted = filtered.sorted { first, second in
+      CMVideoFormatDescriptionGetDimensions(first.formatDescription).width
+        > CMVideoFormatDescriptionGetDimensions(second.formatDescription).width
+    }
+
+    return sorted.map { format in
+      let dims = CMVideoFormatDescriptionGetDimensions(format.formatDescription)
+      return FormatDescription(
+        width: dims.width, height: dims.height, maxFps: format.videoSupportedFrameRateRanges[0].maxFrameRate,
+        binning: format.isVideoBinned)
+    }
   }
 
   func setupCaptureSession() {
@@ -83,17 +81,26 @@ extension ViewController: STCaptureSessionDelegate {
 
     guard let captureSession = captureSession else { return }
 
-    var resolution = dynamicOptions.highResColoring ? STCaptureSessionColorResolution.resolution2592x1936 : STCaptureSessionColorResolution.resolution640x480
+    guard let backCamera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) else { return }
 
-    if !videoDeviceSupportsHighResColor() {
-      print("Device does not support high resolution color mode!")
-      resolution = STCaptureSessionColorResolution.resolution640x480
+    var supportedResolution = FormatDescription.VGA
+
+    // Get all valid 4:3 formats
+    let availableResolutions = getColorAVFormats(backCamera, ratio: 0.75)
+
+    // Try to find a high-quality resolution that is NOT 4K (e.g., between 720p and 1080p/1440p). Anything above width 2000 is usually overkill and may cause battery drain issues.
+    if let bestChoice = availableResolutions.first(where: { $0.width <= 1920 && $0.width >= 1280 }) {
+      supportedResolution = bestChoice
+    }
+    // If nothing found in that "sweet spot", just take the highest available resolution.
+    else if let highestFallback = availableResolutions.first {
+      supportedResolution = highestFallback
     }
 
     let sensorConfig = [
-      kSTCaptureSessionOptionColorResolutionKey: NSNumber(value: resolution.rawValue),
+      kSTCaptureSessionOptionColorResolutionKey: [supportedResolution.width, supportedResolution.height],
       kSTCaptureSessionOptionDepthFrameResolutionKey: NSNumber(value: dynamicOptions.depthResolution.rawValue),
-      kSTCaptureSessionOptionColorMaxFPSKey: NSNumber(value: 30.0),
+      kSTCaptureSessionOptionColorMaxFPSKey: supportedResolution.maxFps,
       kSTCaptureSessionOptionDepthSensorEnabledKey: NSNumber(value: true),
       kSTCaptureSessionOptionUseAppleCoreMotionKey: NSNumber(value: true),
       kSTCaptureSessionOptionDepthStreamPresetKey: NSNumber(value: dynamicOptions.depthStreamPreset.rawValue),
@@ -101,10 +108,6 @@ extension ViewController: STCaptureSessionDelegate {
       kSTCaptureSessionOptionDepthSearchWindowKey: [NSNumber(value: depthWindowSearchWidth), NSNumber(value: depthWindowSearchHeight)],
       kSTCaptureSessionOptionST01CompatibilityKey: st01CompatibilityMode
     ] as [String: Any]
-
-    // Set the lens detector off, and default lens state as "non-WVL" mode
-    captureSession.lens = STLens.normal
-    captureSession.lensDetection = STLensDetectorState.off
 
     // Set ourself as the delegate to receive sensor data.
     captureSession.delegate = self
